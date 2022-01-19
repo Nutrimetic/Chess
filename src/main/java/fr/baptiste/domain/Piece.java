@@ -2,7 +2,7 @@ package fr.baptiste.domain;
 
 import java.util.Objects;
 
-public class Piece {
+public class Piece implements Cloneable {
     private Color color;
     private Type type;
     private int ligne;
@@ -50,12 +50,9 @@ public class Piece {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Piece)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         Piece piece = (Piece) o;
-        return ligne == piece.ligne &&
-                colonne == piece.colonne &&
-                color == piece.color &&
-                type == piece.type;
+        return ligne == piece.ligne && colonne == piece.colonne && color == piece.color && type == piece.type;
     }
 
     @Override
@@ -71,5 +68,10 @@ public class Piece {
                 ", ligne=" + ligne +
                 ", colonne=" + colonne +
                 '}';
+    }
+
+    @Override
+    public Piece clone() {
+        return new Piece(this.getColor(), this.getType(), this.getLigne(), this.getColonne());
     }
 }
