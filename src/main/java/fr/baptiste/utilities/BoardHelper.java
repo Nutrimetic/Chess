@@ -284,12 +284,16 @@ public class BoardHelper {
         if (piece.getColor().equals(Color.WHITE)) {
             //le pion peut avancer d'une case
             pieceMove = addPotentialMove(board, piece, piece.getLigne() - 1, piece.getColonne());
-            pieceMove.ifPresent(result::add);
+            if(pieceMove.isPresent() && pieceMove.get().getPieceCaptured().isEmpty()) {
+                result.add(pieceMove.get());
+            }
 
             //le pion peut se déplacer de 2 cases en avant quand il n'a jamais été joué
             if (piece.getLigne() == 6) {
                 pieceMove = addPotentialMove(board, piece, piece.getLigne() - 2, piece.getColonne());
-                pieceMove.ifPresent(result::add);
+                if(pieceMove.isPresent() && pieceMove.get().getPieceCaptured().isEmpty()) {
+                    result.add(pieceMove.get());
+                }
             }
 
             //le pion peut capturer une pièce sur son côté gauche
@@ -322,12 +326,16 @@ public class BoardHelper {
         } else {
             //le pion peut avancer d'une case
             pieceMove = addPotentialMove(board, piece, piece.getLigne() + 1, piece.getColonne());
-            pieceMove.ifPresent(result::add);
+            if(pieceMove.isPresent() && pieceMove.get().getPieceCaptured().isEmpty()) {
+                result.add(pieceMove.get());
+            }
 
             //le pion peut se déplacer de 2 cases en avant quand il n'a jamais été joué
             if (piece.getLigne() == 1) {
                 pieceMove = addPotentialMove(board, piece, piece.getLigne() + 2, piece.getColonne());
-                pieceMove.ifPresent(result::add);
+                if(pieceMove.isPresent() && pieceMove.get().getPieceCaptured().isEmpty()) {
+                    result.add(pieceMove.get());
+                }
             }
 
             //le pion peut capturer une pièce sur son côté gauche
