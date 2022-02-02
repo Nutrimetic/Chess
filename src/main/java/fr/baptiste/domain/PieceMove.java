@@ -1,30 +1,43 @@
 package fr.baptiste.domain;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class PieceMove {
-    private final Piece pieceBeforeMove;
-    private final Piece pieceAfterMove;
+public class PieceMove implements Cloneable {
+    private final List<Piece> pieceBeforeMove;
+    private final List<Piece> pieceAfterMove;
     private final Piece pieceCaptured;
 
     public PieceMove(Piece pieceBeforeMove, Piece pieceAfterMove) {
+        this.pieceBeforeMove = List.of(pieceBeforeMove);
+        this.pieceAfterMove = List.of(pieceAfterMove);
+        this.pieceCaptured = null;
+    }
+
+    public PieceMove(Piece pieceBeforeMove, Piece pieceAfterMove, Piece pieceCaptured) {
+        this.pieceBeforeMove = List.of(pieceBeforeMove);
+        this.pieceAfterMove = List.of(pieceAfterMove);
+        this.pieceCaptured = pieceCaptured;
+    }
+
+    public PieceMove(List<Piece> pieceBeforeMove, List<Piece> pieceAfterMove) {
         this.pieceBeforeMove = pieceBeforeMove;
         this.pieceAfterMove = pieceAfterMove;
         this.pieceCaptured = null;
     }
 
-    public PieceMove(Piece pieceBeforeMove, Piece pieceAfterMove, Piece pieceCaptured) {
+    public PieceMove(List<Piece> pieceBeforeMove, List<Piece> pieceAfterMove, Piece pieceCaptured) {
         this.pieceBeforeMove = pieceBeforeMove;
         this.pieceAfterMove = pieceAfterMove;
         this.pieceCaptured = pieceCaptured;
     }
 
-    public Piece getPieceBeforeMove() {
+    public List<Piece> getPieceBeforeMove() {
         return pieceBeforeMove;
     }
 
-    public Piece getPieceAfterMove() {
+    public List<Piece> getPieceAfterMove() {
         return pieceAfterMove;
     }
 
@@ -52,5 +65,10 @@ public class PieceMove {
                 ", pieceAfterMove=" + pieceAfterMove +
                 ", pieceCaptured=" + pieceCaptured +
                 '}';
+    }
+
+    @Override
+    protected PieceMove clone() throws CloneNotSupportedException {
+        return new PieceMove(this.pieceBeforeMove, this.pieceAfterMove, pieceCaptured);
     }
 }

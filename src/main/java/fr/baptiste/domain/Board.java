@@ -1,15 +1,18 @@
 package fr.baptiste.domain;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-public class Board {
+public class Board implements Cloneable {
     private Player playerWhite;
     private List<Piece> piecePlayerWhite;
     private Player playerBlack;
     private List<Piece> piecePlayerBlack;
     private Color tempo;
-    private Piece enPassant;
+    private List<PieceMove> history;
 
     public Board(Player playerWhite, List<Piece> piecePlayerWhite, Player playerBlack, List<Piece> piecePlayerBlack, Color tempo) {
         this.playerWhite = playerWhite;
@@ -17,7 +20,7 @@ public class Board {
         this.playerBlack = playerBlack;
         this.piecePlayerBlack = piecePlayerBlack;
         this.tempo = tempo;
-        enPassant = null;
+        history = new ArrayList<>();
     }
 
     public Player getPlayerWhite() {
@@ -60,11 +63,23 @@ public class Board {
         this.tempo = tempo;
     }
 
-    public Optional<Piece> getEnPassant() {
-        return Optional.ofNullable(enPassant);
+    public List<PieceMove> getHistory() {
+        return history;
     }
 
-    public void setEnPassant(Piece enPassant) {
-        this.enPassant = enPassant;
+    public void addHistoryMove(List<PieceMove> pieceMove) {
+        this.history.addAll(pieceMove);
+    }
+
+    @Override
+    public Board clone() throws CloneNotSupportedException {
+        Board result = new Board(
+                playerWhite.clone(),
+                piecePlayerWhite.stream().map(Piece::clone).collect(Collectors.toList()),
+                playerBlack.clone(),
+                piecePlayerBlack.stream().map(Piece::clone).collect(Collectors.toList()),
+                this.tempo);
+        result.addHistoryMove(this.history);
+        return result;
     }
 }

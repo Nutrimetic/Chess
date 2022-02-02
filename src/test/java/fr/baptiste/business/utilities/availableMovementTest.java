@@ -1,7 +1,6 @@
-package fr.baptiste.utilities;
+package fr.baptiste.business.utilities;
 
 import fr.baptiste.domain.*;
-import fr.baptiste.domain.builder.BoardBuilder;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -10,7 +9,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class BoardHelperTest {
+public class availableMovementTest {
 
     /************************************************************************************************************************
      *
@@ -21,75 +20,81 @@ public class BoardHelperTest {
     @Test
     public void itShouldCalculateKingMoveWithoutWhiteAndBlackPiece() {
         //GIVEN
-        final BoardBuilder boardBuilder = new BoardBuilder();
-        final Piece king = new Piece(Color.WHITE, Type.KING, 4, 4);
-        ArrayList<Piece> piecePlayerWhite = new ArrayList<>();
-        piecePlayerWhite.add(king);
+        final Move move = new Move();
+        final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 4, 4);
+        final Piece blackKing = new Piece(Color.BLACK, Type.KING, 0, 0);
         Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
-                piecePlayerWhite,
+                List.of(whiteKing),
                 new Player(Color.BLACK, Collections.emptyList()),
-                Collections.emptyList(),
+                List.of(blackKing),
                 Color.WHITE);
-        BoardHelper boardHelper = new BoardHelper(boardBuilder);
+        board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.WHITE, Type.KING, 3, 3), whiteKing)));
+        board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.BLACK, Type.KING, 3, 3), blackKing)));
+        AvailableMovement availableMovement = new AvailableMovement(move);
 
         //WHEN
-        final List<PieceMove> result = boardHelper.availableMove(board, king);
+        final List<PieceMove> result = availableMovement.availableMove(board, whiteKing);
 
         //THEN
         Assertions.assertThat(result).containsExactlyInAnyOrder(
-                new PieceMove(king, new Piece(Color.WHITE, Type.KING, 3, 3)),
-                new PieceMove(king, new Piece(Color.WHITE, Type.KING, 4, 3)),
-                new PieceMove(king, new Piece(Color.WHITE, Type.KING, 5, 3)),
-                new PieceMove(king, new Piece(Color.WHITE, Type.KING, 3, 4)),
-                new PieceMove(king, new Piece(Color.WHITE, Type.KING, 5, 4)),
-                new PieceMove(king, new Piece(Color.WHITE, Type.KING, 3, 5)),
-                new PieceMove(king, new Piece(Color.WHITE, Type.KING, 4, 5)),
-                new PieceMove(king, new Piece(Color.WHITE, Type.KING, 5, 5)));
+                new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 3, 3)),
+                new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 4, 3)),
+                new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 5, 3)),
+                new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 3, 4)),
+                new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 5, 4)),
+                new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 3, 5)),
+                new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 4, 5)),
+                new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 5, 5)));
     }
 
      @Test
     public void itShouldCalculateKingMoveWithWhitePiece() {
          //GIVEN
-         final BoardBuilder boardBuilder = new BoardBuilder();
-         final Piece king = new Piece(Color.WHITE, Type.KING, 4, 4);
+         final Move move = new Move();
+         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 4, 4);
          final Piece bishop = new Piece(Color.WHITE, Type.BISHOP, 3, 4);
          final Piece pon1 = new Piece(Color.WHITE, Type.BISHOP, 3, 3);
          final Piece pon2 = new Piece(Color.WHITE, Type.BISHOP, 5, 4);
+         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 0, 0);
          Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
-                 Arrays.asList(king, bishop, pon1, pon2),
+                 Arrays.asList(whiteKing, bishop, pon1, pon2),
                  new Player(Color.BLACK, Collections.emptyList()),
-                 Collections.emptyList(),
+                 List.of(blackKing),
                  Color.WHITE);
-         BoardHelper boardHelper = new BoardHelper(boardBuilder);
+         board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.WHITE, Type.KING, 0, 3), whiteKing)));
+         board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.BLACK, Type.KING, 0, 3), blackKing)));
+         AvailableMovement availableMovement = new AvailableMovement(move);
 
          //WHEN
-         final List<PieceMove> result = boardHelper.availableMove(board, king);
+         final List<PieceMove> result = availableMovement.availableMove(board, whiteKing);
 
          //THEN
          Assertions.assertThat(result).containsExactlyInAnyOrder(
-                 new PieceMove(king, new Piece(Color.WHITE, Type.KING, 4, 3)),
-                 new PieceMove(king, new Piece(Color.WHITE, Type.KING, 5, 3)),
-                 new PieceMove(king, new Piece(Color.WHITE, Type.KING, 3, 5)),
-                 new PieceMove(king, new Piece(Color.WHITE, Type.KING, 4, 5)),
-                 new PieceMove(king, new Piece(Color.WHITE, Type.KING, 5, 5)));
+                 new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 4, 3)),
+                 new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 5, 3)),
+                 new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 3, 5)),
+                 new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 4, 5)),
+                 new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 5, 5)));
      }
 
     @Test
     public void itShouldCalculateKingMoveWithoutWhiteAndWithBlackPiece() {
         //GIVEN
-        final BoardBuilder boardBuilder = new BoardBuilder();
+        final Move move = new Move();
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 4, 4);
+        final Piece blackKing = new Piece(Color.BLACK, Type.KING, 0, 6);
         final Piece blackPon = new Piece(Color.BLACK, Type.PON, 3, 3);
         final Piece blackRock = new Piece(Color.BLACK, Type.ROCK, 4, 3);
         final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
                 Collections.singletonList(whiteKing),
                 new Player(Color.BLACK, Collections.emptyList()),
-                Arrays.asList(blackPon, blackRock),
+                Arrays.asList(blackKing, blackPon, blackRock),
                 Color.WHITE);
-        final BoardHelper boardHelper = new BoardHelper(boardBuilder);
+        board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.WHITE, Type.KING, 0, 3), whiteKing)));
+        final AvailableMovement availableMovement = new AvailableMovement(move);
 
         //WHEN
-        final List<PieceMove> result = boardHelper.availableMove(board, whiteKing);
+        final List<PieceMove> result = availableMovement.availableMove(board, whiteKing);
 
         //THEN
         Assertions.assertThat(result).containsExactlyInAnyOrder(
@@ -106,10 +111,11 @@ public class BoardHelperTest {
     @Test
     public void itShouldCalculateKingMoveWithWhiteAndBlackPiece() {
         //GIVEN
-        final BoardBuilder boardBuilder = new BoardBuilder();
+        final Move move = new Move();
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 4, 4);
         final Piece whiteKnight = new Piece(Color.WHITE, Type.KNIGHT, 2, 4);
-        final Piece blackPon = new Piece(Color.BLACK, Type.PON, 2, 2);
+        final Piece blackKing = new Piece(Color.BLACK, Type.KING, 0, 6);
+        final Piece blackPon = new Piece(Color.BLACK, Type.PON, 6, 2);
         final Piece blackRock = new Piece(Color.BLACK, Type.ROCK, 0, 4);
         List<Piece> piecePlayerWhite = new ArrayList<>();
         piecePlayerWhite.add(whiteKing);
@@ -117,18 +123,19 @@ public class BoardHelperTest {
                 new Player(Color.WHITE, Collections.emptyList()),
                 Arrays.asList(whiteKing, whiteKnight),
                 new Player(Color.BLACK, Collections.emptyList()),
-                Arrays.asList(blackPon, blackRock),
+                Arrays.asList(blackKing, blackPon, blackRock),
                 Color.WHITE);
-        final BoardHelper boardHelper = new BoardHelper(boardBuilder);
+        board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.WHITE, Type.KING, 0, 3), whiteKing)));
+        final AvailableMovement availableMovement = new AvailableMovement(move);
 
         //WHEN
-        final List<PieceMove> result = boardHelper.availableMove(board, whiteKing);
+        final List<PieceMove> result = availableMovement.availableMove(board, whiteKing);
 
         //THEN
         Assertions.assertThat(result).containsExactlyInAnyOrder(
-                //new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 3, 3)),
+                new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 3, 3)),
                 new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 4, 3)),
-                new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 5, 3)),
+                //new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 5, 3)),
                 new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 3, 4)),
                 new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 5, 4)),
                 new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 3, 5)),
@@ -139,46 +146,50 @@ public class BoardHelperTest {
     @Test
     public void itShouldCalculateKingMoveWithBlackPiece() {
         //GIVEN
-        final BoardBuilder boardBuilder = new BoardBuilder();
-        final Piece king = new Piece(Color.BLACK, Type.KING, 4, 4);
+        final Move move = new Move();
+        final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 0, 6);
+        final Piece blackKing = new Piece(Color.BLACK, Type.KING, 4, 4);
         final Piece bishop = new Piece(Color.BLACK, Type.BISHOP, 3, 4);
         final Piece pon1 = new Piece(Color.BLACK, Type.BISHOP, 3, 3);
         final Piece pon2 = new Piece(Color.BLACK, Type.BISHOP, 5, 4);
         Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
-                Collections.emptyList(),
+                List.of(whiteKing),
                 new Player(Color.BLACK, Collections.emptyList()),
-                Arrays.asList(king, bishop, pon1, pon2),
+                Arrays.asList(blackKing, bishop, pon1, pon2),
                 Color.BLACK);
-        BoardHelper boardHelper = new BoardHelper(boardBuilder);
+        board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.BLACK, Type.KING, 0, 3), blackKing)));
+        AvailableMovement availableMovement = new AvailableMovement(move);
 
         //WHEN
-        final List<PieceMove> result = boardHelper.availableMove(board, king);
+        final List<PieceMove> result = availableMovement.availableMove(board, blackKing);
 
         //THEN
         Assertions.assertThat(result).containsExactlyInAnyOrder(
-                new PieceMove(king, new Piece(Color.BLACK, Type.KING, 4, 3)),
-                new PieceMove(king, new Piece(Color.BLACK, Type.KING, 5, 3)),
-                new PieceMove(king, new Piece(Color.BLACK, Type.KING, 3, 5)),
-                new PieceMove(king, new Piece(Color.BLACK, Type.KING, 4, 5)),
-                new PieceMove(king, new Piece(Color.BLACK, Type.KING, 5, 5)));
+                new PieceMove(blackKing, new Piece(Color.BLACK, Type.KING, 4, 3)),
+                new PieceMove(blackKing, new Piece(Color.BLACK, Type.KING, 5, 3)),
+                new PieceMove(blackKing, new Piece(Color.BLACK, Type.KING, 3, 5)),
+                new PieceMove(blackKing, new Piece(Color.BLACK, Type.KING, 4, 5)),
+                new PieceMove(blackKing, new Piece(Color.BLACK, Type.KING, 5, 5)));
     }
 
     @Test
     public void itShouldCalculateKingMoveWithoutBlackAndWithWhitePiece() {
         //GIVEN
-        final BoardBuilder boardBuilder = new BoardBuilder();
+        final Move move = new Move();
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 4, 4);
         final Piece whitePon = new Piece(Color.WHITE, Type.PON, 3, 3);
         final Piece whiteRock = new Piece(Color.WHITE, Type.ROCK, 4, 3);
-        final Board board = new Board(new Player(Color.BLACK, Collections.emptyList()),
-                List.of(whitePon, whiteRock),
+        final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 0, 0);
+        final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
+                List.of(whiteKing, whitePon, whiteRock),
                 new Player(Color.BLACK, Collections.emptyList()),
                 Collections.singletonList(blackKing),
                 Color.BLACK);
-        final BoardHelper boardHelper = new BoardHelper(boardBuilder);
+        board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.BLACK, Type.KING, 0, 3), blackKing)));
+        final AvailableMovement availableMovement = new AvailableMovement(move);
 
         //WHEN
-        final List<PieceMove> result = boardHelper.availableMove(board, blackKing);
+        final List<PieceMove> result = availableMovement.availableMove(board, blackKing);
 
         //THEN
         Assertions.assertThat(result).containsExactlyInAnyOrder(
@@ -195,19 +206,21 @@ public class BoardHelperTest {
     @Test
     public void itShouldCalculateWhiteKnightMove() {
         //GIVEN
-        final BoardBuilder boardBuilder = new BoardBuilder();
+        final Move move = new Move();
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 4, 4);
+        final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 0, 0);
         final Piece whitePon = new Piece(Color.WHITE, Type.PON, 3, 3);
         final Piece whiteRock = new Piece(Color.WHITE, Type.ROCK, 4, 3);
-        final Board board = new Board(new Player(Color.BLACK, Collections.emptyList()),
-                List.of(whitePon, whiteRock),
+        final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
+                List.of(whiteKing, whitePon, whiteRock),
                 new Player(Color.BLACK, Collections.emptyList()),
                 Collections.singletonList(blackKing),
                 Color.BLACK);
-        final BoardHelper boardHelper = new BoardHelper(boardBuilder);
+        board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.BLACK, Type.KING, 0, 3), blackKing)));
+        final AvailableMovement availableMovement = new AvailableMovement(move);
 
         //WHEN
-        final List<PieceMove> result = boardHelper.availableMove(board, blackKing);
+        final List<PieceMove> result = availableMovement.availableMove(board, blackKing);
 
         //THEN
         Assertions.assertThat(result).containsExactlyInAnyOrder(
@@ -221,8 +234,255 @@ public class BoardHelperTest {
                 new PieceMove(blackKing, new Piece(Color.BLACK, Type.KING, 5, 5)));
     }
 
-    //todo faire un test des coups possible du cavalier quand le roi est déja en cours d'echec
-    //todo faire un test pour castle
+    @Test
+    public void itShouldCalculateWhiteCastle() {
+        //GIVEN
+        final Move move = new Move();
+        final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 0, 4);
+        final Piece whitePon = new Piece(Color.WHITE, Type.PON, 1, 5);
+        final Piece whitePon2 = new Piece(Color.WHITE, Type.PON, 1, 6);
+        final Piece whitePon3 = new Piece(Color.WHITE, Type.PON, 1, 7);
+        final Piece whiteRock = new Piece(Color.WHITE, Type.ROCK, 0, 7);
+        final Piece blackKing = new Piece(Color.BLACK, Type.KING, 5, 5);
+        final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
+                List.of(whiteKing, whiteRock, whitePon, whitePon2, whitePon3),
+                new Player(Color.BLACK, Collections.emptyList()),
+                List.of(blackKing),
+                Color.WHITE);
+        board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.WHITE, Type.ROCK, 0, 0), new Piece(Color.WHITE, Type.ROCK, 4, 0))));
+        board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.BLACK, Type.KING, 0, 0), new Piece(Color.BLACK, Type.KING, 4, 0))));
+        final AvailableMovement availableMovement = new AvailableMovement(move);
+
+        //WHEN
+        final List<PieceMove> result = availableMovement.availableMove(board, whiteKing);
+
+        //THEN
+        Assertions.assertThat(result).containsExactlyInAnyOrder(
+                new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 0, 3)),
+                new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 0, 5)),
+                new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 1, 3)),
+                new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 1, 4)),
+                new PieceMove(
+                        List.of(whiteKing, whiteRock),
+                        List.of(new Piece(Color.WHITE, Type.KING, 0, 6), new Piece(Color.WHITE, Type.ROCK, 0, 5))
+                ));
+    }
+
+    @Test
+    public void itShouldCalculateWhiteCastleWhenThereIsPieceOnTheWay() {
+        //GIVEN
+        final Move move = new Move();
+        final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 0, 4);
+        final Piece whitePon = new Piece(Color.WHITE, Type.PON, 1, 0);
+        final Piece whitePon2 = new Piece(Color.WHITE, Type.PON, 1, 1);
+        final Piece whitePon3 = new Piece(Color.WHITE, Type.PON, 1, 2);
+        final Piece whiteKnight = new Piece(Color.WHITE, Type.KNIGHT, 0, 1);
+        final Piece whiteRock = new Piece(Color.WHITE, Type.ROCK, 0, 0);
+        final Piece blackKing = new Piece(Color.BLACK, Type.KING, 5, 5);
+        final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
+                List.of(whiteKing, whiteKnight, whiteRock, whitePon, whitePon2, whitePon3),
+                new Player(Color.BLACK, Collections.emptyList()),
+                List.of(blackKing),
+                Color.WHITE);
+        board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.WHITE, Type.ROCK, 0, 7), new Piece(Color.WHITE, Type.ROCK, 4, 7))));
+        board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.BLACK, Type.KING, 0, 0), new Piece(Color.BLACK, Type.KING, 4, 0))));
+        final AvailableMovement availableMovement = new AvailableMovement(move);
+
+        //WHEN
+        final List<PieceMove> result = availableMovement.availableMove(board, whiteKing);
+
+        //THEN
+        Assertions.assertThat(result).containsExactlyInAnyOrder(
+                new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 0, 3)),
+                new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 0, 5)),
+                new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 1, 3)),
+                new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 1, 4)),
+                new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 1, 5)));
+    }
+
+    @Test
+    public void itShouldCalculateWhiteCastleWhenKingHasAlreadyMoved() {
+        //GIVEN
+        final Move move = new Move();
+        final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 0, 4);
+        final Piece whitePon = new Piece(Color.WHITE, Type.PON, 1, 0);
+        final Piece whitePon2 = new Piece(Color.WHITE, Type.PON, 1, 1);
+        final Piece whitePon3 = new Piece(Color.WHITE, Type.PON, 1, 2);
+        final Piece whiteRock = new Piece(Color.WHITE, Type.ROCK, 0, 0);
+        final Piece blackKing = new Piece(Color.BLACK, Type.KING, 5, 5);
+        final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
+                List.of(whiteKing, whiteRock, whitePon, whitePon2, whitePon3),
+                new Player(Color.BLACK, Collections.emptyList()),
+                List.of(blackKing),
+                Color.WHITE);
+        board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.WHITE, Type.KING, 0, 7), new Piece(Color.WHITE, Type.KING, 4, 7))));
+        board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.BLACK, Type.KING, 0, 0), new Piece(Color.BLACK, Type.KING, 4, 0))));
+        final AvailableMovement availableMovement = new AvailableMovement(move);
+
+        //WHEN
+        final List<PieceMove> result = availableMovement.availableMove(board, whiteKing);
+
+        //THEN
+        Assertions.assertThat(result).containsExactlyInAnyOrder(
+                new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 0, 3)),
+                new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 0, 5)),
+                new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 1, 3)),
+                new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 1, 4)),
+                new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 1, 5)));
+    }
+
+    @Test
+    public void itShouldCalculateWhiteCastleWhenKingIsChecked() {
+        //GIVEN
+        final Move move = new Move();
+        final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 0, 4);
+        final Piece whiteRock = new Piece(Color.WHITE, Type.ROCK, 0, 0);
+        final Piece whiteRock2 = new Piece(Color.WHITE, Type.ROCK, 0, 7);
+        final Piece blackKing = new Piece(Color.BLACK, Type.KING, 5, 5);
+        final Piece blackQueen = new Piece(Color.BLACK, Type.QUEEN, 5, 4);
+        final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
+                List.of(whiteKing, whiteRock, whiteRock2),
+                new Player(Color.BLACK, Collections.emptyList()),
+                List.of(blackKing, blackQueen),
+                Color.WHITE);
+        board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.BLACK, Type.KING, 0, 0), new Piece(Color.BLACK, Type.KING, 4, 0))));
+        final AvailableMovement availableMovement = new AvailableMovement(move);
+
+        //WHEN
+        final List<PieceMove> result = availableMovement.availableMove(board, whiteKing);
+
+        //THEN
+        Assertions.assertThat(result).containsExactlyInAnyOrder(
+                new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 0, 3)),
+                new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 0, 5)),
+                new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 1, 3)),
+                new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 1, 5)));
+    }
+
+    @Test
+    public void itShouldCalculateBlackCastle() {
+        //GIVEN
+        final Move move = new Move();
+        final Piece blackKing = new Piece(Color.BLACK, Type.KING, 7, 4);
+        final Piece blackPon = new Piece(Color.BLACK, Type.PON, 6, 5);
+        final Piece blackPon2 = new Piece(Color.BLACK, Type.PON, 6, 6);
+        final Piece blackPon3 = new Piece(Color.BLACK, Type.PON, 6, 7);
+        final Piece blackRock = new Piece(Color.BLACK, Type.ROCK, 7, 7);
+        final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 3, 3);
+        final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
+                List.of(whiteKing),
+                new Player(Color.BLACK, Collections.emptyList()),
+                List.of(blackKing, blackRock, blackPon, blackPon2, blackPon3),
+                Color.BLACK);
+        board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.BLACK, Type.ROCK, 7, 0), new Piece(Color.BLACK, Type.ROCK, 4, 0))));
+        board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.WHITE, Type.KING, 0, 0), new Piece(Color.WHITE, Type.KING, 4, 0))));
+        final AvailableMovement availableMovement = new AvailableMovement(move);
+
+        //WHEN
+        final List<PieceMove> result = availableMovement.availableMove(board, blackKing);
+
+        //THEN
+        Assertions.assertThat(result).containsExactlyInAnyOrder(
+                new PieceMove(blackKing, new Piece(Color.BLACK, Type.KING, 7, 3)),
+                new PieceMove(blackKing, new Piece(Color.BLACK, Type.KING, 7, 5)),
+                new PieceMove(blackKing, new Piece(Color.BLACK, Type.KING, 6, 3)),
+                new PieceMove(blackKing, new Piece(Color.BLACK, Type.KING, 6, 4)),
+                new PieceMove(
+                        List.of(blackKing, blackRock),
+                        List.of(new Piece(Color.BLACK, Type.KING, 7, 6), new Piece(Color.BLACK, Type.ROCK, 7, 5))
+                ));
+    }
+
+    @Test
+    public void itShouldCalculateBlackCastleWhenThereIsPieceOnTheWay() {
+        //GIVEN
+        final Move move = new Move();
+        final Piece blackKing = new Piece(Color.BLACK, Type.KING, 7, 4);
+        final Piece blackPon = new Piece(Color.BLACK, Type.PON, 6, 0);
+        final Piece blackPon2 = new Piece(Color.BLACK, Type.PON, 6, 1);
+        final Piece blackPon3 = new Piece(Color.BLACK, Type.PON, 6, 2);
+        final Piece blackKnight = new Piece(Color.BLACK, Type.KNIGHT, 7, 1);
+        final Piece blackRock = new Piece(Color.BLACK, Type.ROCK, 7, 0);
+        final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 3, 3);
+        final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
+                List.of(whiteKing),
+                new Player(Color.BLACK, Collections.emptyList()),
+                List.of(blackKing, blackKnight, blackRock, blackPon, blackPon2, blackPon3),
+                Color.BLACK);
+        board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.BLACK, Type.ROCK, 7, 7), new Piece(Color.BLACK, Type.ROCK, 4, 7))));
+        board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.WHITE, Type.KING, 0, 0), new Piece(Color.WHITE, Type.KING, 4, 0))));
+        final AvailableMovement availableMovement = new AvailableMovement(move);
+
+        //WHEN
+        final List<PieceMove> result = availableMovement.availableMove(board, blackKing);
+
+        //THEN
+        Assertions.assertThat(result).containsExactlyInAnyOrder(
+                new PieceMove(blackKing, new Piece(Color.BLACK, Type.KING, 7, 3)),
+                new PieceMove(blackKing, new Piece(Color.BLACK, Type.KING, 7, 5)),
+                new PieceMove(blackKing, new Piece(Color.BLACK, Type.KING, 6, 3)),
+                new PieceMove(blackKing, new Piece(Color.BLACK, Type.KING, 6, 4)),
+                new PieceMove(blackKing, new Piece(Color.BLACK, Type.KING, 6, 5)));
+    }
+
+    @Test
+    public void itShouldCalculateBlackCastleWhenKingHasAlreadyMoved() {
+        //GIVEN
+        final Move move = new Move();
+        final Piece blackKing = new Piece(Color.BLACK, Type.KING, 7, 4);
+        final Piece blackPon = new Piece(Color.BLACK, Type.PON, 6, 0);
+        final Piece blackPon2 = new Piece(Color.BLACK, Type.PON, 6, 1);
+        final Piece blackPon3 = new Piece(Color.BLACK, Type.PON, 6, 2);
+        final Piece blackRock = new Piece(Color.BLACK, Type.ROCK, 7, 0);
+        final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 3, 3);
+        final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
+                List.of(whiteKing),
+                new Player(Color.BLACK, Collections.emptyList()),
+                List.of(blackKing, blackRock, blackPon, blackPon2, blackPon3),
+                Color.BLACK);
+        board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.BLACK, Type.KING, 7, 7), new Piece(Color.BLACK, Type.KING, 4, 7))));
+        board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.WHITE, Type.KING, 0, 0), new Piece(Color.WHITE, Type.KING, 4, 0))));
+        final AvailableMovement availableMovement = new AvailableMovement(move);
+
+        //WHEN
+        final List<PieceMove> result = availableMovement.availableMove(board, blackKing);
+
+        //THEN
+        Assertions.assertThat(result).containsExactlyInAnyOrder(
+                new PieceMove(blackKing, new Piece(Color.BLACK, Type.KING, 7, 3)),
+                new PieceMove(blackKing, new Piece(Color.BLACK, Type.KING, 7, 5)),
+                new PieceMove(blackKing, new Piece(Color.BLACK, Type.KING, 6, 3)),
+                new PieceMove(blackKing, new Piece(Color.BLACK, Type.KING, 6, 4)),
+                new PieceMove(blackKing, new Piece(Color.BLACK, Type.KING, 6, 5)));
+    }
+
+    @Test
+    public void itShouldCalculateBlackCastleWhenKingIsChecked() {
+        //GIVEN
+        final Move move = new Move();
+        final Piece blackKing = new Piece(Color.BLACK, Type.KING, 7, 4);
+        final Piece blackRock = new Piece(Color.BLACK, Type.ROCK, 7, 0);
+        final Piece blackRock2 = new Piece(Color.BLACK, Type.ROCK, 7, 7);
+        final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 4, 5);
+        final Piece whiteQueen = new Piece(Color.WHITE, Type.QUEEN, 4, 4);
+        final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
+                List.of(whiteKing, whiteQueen),
+                new Player(Color.BLACK, Collections.emptyList()),
+                List.of(blackKing, blackRock, blackRock2),
+                Color.BLACK);
+        board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.WHITE, Type.KING, 0, 0), new Piece(Color.WHITE, Type.KING, 4, 0))));
+        final AvailableMovement availableMovement = new AvailableMovement(move);
+
+        //WHEN
+        final List<PieceMove> result = availableMovement.availableMove(board, blackKing);
+
+        //THEN
+        Assertions.assertThat(result).containsExactlyInAnyOrder(
+                new PieceMove(blackKing, new Piece(Color.BLACK, Type.KING, 7, 3)),
+                new PieceMove(blackKing, new Piece(Color.BLACK, Type.KING, 7, 5)),
+                new PieceMove(blackKing, new Piece(Color.BLACK, Type.KING, 6, 3)),
+                new PieceMove(blackKing, new Piece(Color.BLACK, Type.KING, 6, 5)));
+    }
 
     /************************************************************************************************************************
      *
@@ -233,7 +493,7 @@ public class BoardHelperTest {
     @Test
     public void itShouldCalculateWhiteKnightMoves() {
         //GIVEN
-        final BoardBuilder boardBuilder = new BoardBuilder();
+        final Move move = new Move();
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 4, 4);
         final Piece whiteKnight = new Piece(Color.WHITE, Type.KNIGHT, 5, 6);
         final Board board = new Board(new Player(Color.BLACK, Collections.emptyList()),
@@ -241,10 +501,10 @@ public class BoardHelperTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 Collections.emptyList(),
                 Color.WHITE);
-        final BoardHelper boardHelper = new BoardHelper(boardBuilder);
+        final AvailableMovement availableMovement = new AvailableMovement(move);
 
         //WHEN
-        final List<PieceMove> result = boardHelper.availableMove(board, whiteKnight);
+        final List<PieceMove> result = availableMovement.availableMove(board, whiteKnight);
 
         //THEN
         Assertions.assertThat(result).containsExactlyInAnyOrder(
@@ -259,7 +519,7 @@ public class BoardHelperTest {
     @Test
     public void itShouldCalculateWhiteKnightMovesWithBlackPiece() {
         //GIVEN
-        final BoardBuilder boardBuilder = new BoardBuilder();
+        final Move move = new Move();
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 1, 2);
         final Piece whiteKnight = new Piece(Color.WHITE, Type.KNIGHT, 5, 6);
         final Piece blackQueen = new Piece(Color.BLACK, Type.QUEEN, 7, 7);
@@ -269,10 +529,10 @@ public class BoardHelperTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackQueen, blackPon),
                 Color.WHITE);
-        final BoardHelper boardHelper = new BoardHelper(boardBuilder);
+        final AvailableMovement availableMovement = new AvailableMovement(move);
 
         //WHEN
-        final List<PieceMove> result = boardHelper.availableMove(board, whiteKnight);
+        final List<PieceMove> result = availableMovement.availableMove(board, whiteKnight);
 
         //THEN
         Assertions.assertThat(result).containsExactlyInAnyOrder(
@@ -288,7 +548,7 @@ public class BoardHelperTest {
     @Test
     public void itShouldCalculateBlackKnightMovesifKingIsCheckedByOnePiece() {
         //GIVEN
-        final BoardBuilder boardBuilder = new BoardBuilder();
+        final Move move = new Move();
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 4, 4);
         final Piece blackKnight = new Piece(Color.BLACK, Type.KNIGHT, 5, 6);
         final Piece whiteQueen = new Piece(Color.WHITE, Type.QUEEN, 7, 7);
@@ -298,10 +558,10 @@ public class BoardHelperTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackKnight, blackKing),
                 Color.BLACK);
-        final BoardHelper boardHelper = new BoardHelper(boardBuilder);
+        final AvailableMovement availableMovement = new AvailableMovement(move);
 
         //WHEN
-        final List<PieceMove> result = boardHelper.availableMove(board, blackKnight);
+        final List<PieceMove> result = availableMovement.availableMove(board, blackKnight);
 
         //THEN
         Assertions.assertThat(result).containsExactlyInAnyOrder(
@@ -312,20 +572,23 @@ public class BoardHelperTest {
     @Test
     public void itShouldCalculateBlackKnightMovesifKingIsCheckedByTwoPiece() {
         //GIVEN
-        final BoardBuilder boardBuilder = new BoardBuilder();
+        final Move move = new Move();
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 4, 4);
         final Piece blackKnight = new Piece(Color.BLACK, Type.KNIGHT, 5, 6);
+        final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 0, 0);
         final Piece whiteQueen = new Piece(Color.WHITE, Type.QUEEN, 7, 7);
-        final Piece whitePon = new Piece(Color.WHITE, Type.PON, 5, 3);
+        final Piece whitePon = new Piece(Color.WHITE, Type.PON, 3, 3);
         final Board board = new Board(new Player(Color.BLACK, Collections.emptyList()),
-                List.of(whitePon, whiteQueen),
+                List.of(whiteKing, whitePon, whiteQueen),
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackKnight, blackKing),
                 Color.BLACK);
-        final BoardHelper boardHelper = new BoardHelper(boardBuilder);
+        board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.WHITE, Type.KING, 3, 3), whiteKing)));
+        board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.BLACK, Type.KING, 3, 3), blackKing)));
+        final AvailableMovement availableMovement = new AvailableMovement(move);
 
         //WHEN
-        final List<PieceMove> result = boardHelper.availableMove(board, blackKnight);
+        final List<PieceMove> result = availableMovement.availableMove(board, blackKnight);
 
         //THEN
         Assertions.assertThat(result).isEmpty();
@@ -334,7 +597,7 @@ public class BoardHelperTest {
     @Test
     public void itShouldCalculateWhiteKnightMovesWhenHeIsPinned() {
         //GIVEN
-        final BoardBuilder boardBuilder = new BoardBuilder();
+        final Move move = new Move();
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 4, 4);
         final Piece whiteKnight = new Piece(Color.WHITE, Type.KNIGHT, 3, 4);
         final Piece blackQueen = new Piece(Color.BLACK, Type.QUEEN, 0, 4);
@@ -343,10 +606,10 @@ public class BoardHelperTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackQueen),
                 Color.WHITE);
-        final BoardHelper boardHelper = new BoardHelper(boardBuilder);
+        final AvailableMovement availableMovement = new AvailableMovement(move);
 
         //WHEN
-        final List<PieceMove> result = boardHelper.availableMove(board, whiteKnight);
+        final List<PieceMove> result = availableMovement.availableMove(board, whiteKnight);
 
         //THEN
         Assertions.assertThat(result).isEmpty();
@@ -355,7 +618,7 @@ public class BoardHelperTest {
     @Test
     public void itShouldCalculateBlackKnightMoves() {
         //GIVEN
-        final BoardBuilder boardBuilder = new BoardBuilder();
+        final Move move = new Move();
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 4, 4);
         final Piece blackKnight = new Piece(Color.BLACK, Type.KNIGHT, 5, 6);
         final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
@@ -363,10 +626,10 @@ public class BoardHelperTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackKnight, blackKing),
                 Color.BLACK);
-        final BoardHelper boardHelper = new BoardHelper(boardBuilder);
+        final AvailableMovement availableMovement = new AvailableMovement(move);
 
         //WHEN
-        final List<PieceMove> result = boardHelper.availableMove(board, blackKnight);
+        final List<PieceMove> result = availableMovement.availableMove(board, blackKnight);
 
         //THEN
         Assertions.assertThat(result).containsExactlyInAnyOrder(
@@ -381,7 +644,7 @@ public class BoardHelperTest {
     @Test
     public void itShouldCalculateBlackKnightMovesWithWhitePiece() {
         //GIVEN
-        final BoardBuilder boardBuilder = new BoardBuilder();
+        final Move move = new Move();
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 1, 2);
         final Piece blackKnight = new Piece(Color.BLACK, Type.KNIGHT, 5, 6);
         final Piece whiteQueen = new Piece(Color.WHITE, Type.QUEEN, 7, 7);
@@ -391,10 +654,10 @@ public class BoardHelperTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackKnight, blackKing),
                 Color.BLACK);
-        final BoardHelper boardHelper = new BoardHelper(boardBuilder);
+        final AvailableMovement availableMovement = new AvailableMovement(move);
 
         //WHEN
-        final List<PieceMove> result = boardHelper.availableMove(board, blackKnight);
+        final List<PieceMove> result = availableMovement.availableMove(board, blackKnight);
 
         //THEN
         Assertions.assertThat(result).containsExactlyInAnyOrder(
@@ -410,7 +673,7 @@ public class BoardHelperTest {
     @Test
     public void itShouldCalculateWhiteKnightMovesifKingIsCheckedByOnePiece() {
         //GIVEN
-        final BoardBuilder boardBuilder = new BoardBuilder();
+        final Move move = new Move();
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 4, 4);
         final Piece whiteKnight = new Piece(Color.WHITE, Type.KNIGHT, 5, 6);
         final Piece blackQueen = new Piece(Color.BLACK, Type.QUEEN, 7, 7);
@@ -420,10 +683,10 @@ public class BoardHelperTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackQueen, blackPon),
                 Color.WHITE);
-        final BoardHelper boardHelper = new BoardHelper(boardBuilder);
+        final AvailableMovement availableMovement = new AvailableMovement(move);
 
         //WHEN
-        final List<PieceMove> result = boardHelper.availableMove(board, whiteKnight);
+        final List<PieceMove> result = availableMovement.availableMove(board, whiteKnight);
 
         //THEN
         Assertions.assertThat(result).containsExactlyInAnyOrder(
@@ -434,20 +697,20 @@ public class BoardHelperTest {
     @Test
     public void itShouldCalculateWhiteKnightMovesifKingIsCheckedByTwoPiece() {
         //GIVEN
-        final BoardBuilder boardBuilder = new BoardBuilder();
+        final Move move = new Move();
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 4, 4);
         final Piece whiteKnight = new Piece(Color.WHITE, Type.KNIGHT, 5, 6);
         final Piece blackQueen = new Piece(Color.BLACK, Type.QUEEN, 7, 7);
-        final Piece blackPon = new Piece(Color.BLACK, Type.PON, 3, 3);
+        final Piece blackPon = new Piece(Color.BLACK, Type.PON, 5, 3);
         final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
                 List.of(whiteKing, whiteKnight),
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackQueen, blackPon),
                 Color.WHITE);
-        final BoardHelper boardHelper = new BoardHelper(boardBuilder);
+        final AvailableMovement availableMovement = new AvailableMovement(move);
 
         //WHEN
-        final List<PieceMove> result = boardHelper.availableMove(board, whiteKnight);
+        final List<PieceMove> result = availableMovement.availableMove(board, whiteKnight);
 
         //THEN
         Assertions.assertThat(result).isEmpty();
@@ -456,7 +719,7 @@ public class BoardHelperTest {
     @Test
     public void itShouldCalculateBlackKnightMovesWhenHeIsPinned() {
         //GIVEN
-        final BoardBuilder boardBuilder = new BoardBuilder();
+        final Move move = new Move();
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 4, 4);
         final Piece blackKnight = new Piece(Color.BLACK, Type.KNIGHT, 3, 4);
         final Piece whiteQueen = new Piece(Color.WHITE, Type.QUEEN, 0, 4);
@@ -465,10 +728,10 @@ public class BoardHelperTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackKnight, blackKing),
                 Color.BLACK);
-        final BoardHelper boardHelper = new BoardHelper(boardBuilder);
+        final AvailableMovement availableMovement = new AvailableMovement(move);
 
         //WHEN
-        final List<PieceMove> result = boardHelper.availableMove(board, blackKnight);
+        final List<PieceMove> result = availableMovement.availableMove(board, blackKnight);
 
         //THEN
         Assertions.assertThat(result).isEmpty();
@@ -483,7 +746,7 @@ public class BoardHelperTest {
     @Test
     public void itShouldCalculateWhiteBishopMoves() {
         //GIVEN
-        final BoardBuilder boardBuilder = new BoardBuilder();
+        final Move move = new Move();
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 4, 4);
         final Piece whiteBishop = new Piece(Color.WHITE, Type.BISHOP, 3, 4);
         final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
@@ -491,10 +754,10 @@ public class BoardHelperTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 Collections.emptyList(),
                 Color.WHITE);
-        final BoardHelper boardHelper = new BoardHelper(boardBuilder);
+        final AvailableMovement availableMovement = new AvailableMovement(move);
 
         //WHEN
-        final List<PieceMove> result = boardHelper.availableMove(board, whiteBishop);
+        final List<PieceMove> result = availableMovement.availableMove(board, whiteBishop);
 
         //THEN
         Assertions.assertThat(result).containsExactlyInAnyOrder(
@@ -520,7 +783,7 @@ public class BoardHelperTest {
     @Test
     public void itShouldCalculateBlackBishopMoves() {
         //GIVEN
-        final BoardBuilder boardBuilder = new BoardBuilder();
+        final Move move = new Move();
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 4, 4);
         final Piece blackBishop = new Piece(Color.BLACK, Type.BISHOP, 3, 4);
         final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
@@ -528,10 +791,10 @@ public class BoardHelperTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackKing, blackBishop),
                 Color.BLACK);
-        final BoardHelper boardHelper = new BoardHelper(boardBuilder);
+        final AvailableMovement availableMovement = new AvailableMovement(move);
 
         //WHEN
-        final List<PieceMove> result = boardHelper.availableMove(board, blackBishop);
+        final List<PieceMove> result = availableMovement.availableMove(board, blackBishop);
 
         //THEN
         Assertions.assertThat(result).containsExactlyInAnyOrder(
@@ -557,7 +820,7 @@ public class BoardHelperTest {
     @Test
     public void itShouldCalculateWhiteBishopMoveWhenThereAreBlackAndWhitePiece() {
         //GIVEN
-        final BoardBuilder boardBuilder = new BoardBuilder();
+        final Move move = new Move();
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 4, 5);
         final Piece whiteBishop = new Piece(Color.WHITE, Type.BISHOP, 3, 4);
         final Piece blackPon = new Piece(Color.BLACK, Type.PON, 2, 3);
@@ -568,10 +831,12 @@ public class BoardHelperTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackPon, blackKnight, blackKing),
                 Color.WHITE);
-        final BoardHelper boardHelper = new BoardHelper(boardBuilder);
+        board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.WHITE, Type.KING, 3, 3), whiteKing)));
+        board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.BLACK, Type.KING, 0, 3), blackKing)));
+        final AvailableMovement availableMovement = new AvailableMovement(move);
 
         //WHEN
-        final List<PieceMove> result = boardHelper.availableMove(board, whiteBishop);
+        final List<PieceMove> result = availableMovement.availableMove(board, whiteBishop);
 
         //THEN
         Assertions.assertThat(result).containsExactlyInAnyOrder(
@@ -590,7 +855,7 @@ public class BoardHelperTest {
     @Test
     public void itShouldCalculateBlackBishopMoveWhenThereAreBlackAndWhitePiece() {
         //GIVEN
-        final BoardBuilder boardBuilder = new BoardBuilder();
+        final Move move = new Move();
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 4, 5);
         final Piece blackBishop = new Piece(Color.BLACK, Type.BISHOP, 3, 4);
         final Piece whitePon = new Piece(Color.WHITE, Type.PON, 2, 3);
@@ -601,10 +866,12 @@ public class BoardHelperTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackKing, blackBishop),
                 Color.BLACK);
-        final BoardHelper boardHelper = new BoardHelper(boardBuilder);
+        board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.WHITE, Type.KING, 3, 3), whiteKing)));
+        board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.BLACK, Type.KING, 0, 3), blackKing)));
+        final AvailableMovement availableMovement = new AvailableMovement(move);
 
         //WHEN
-        final List<PieceMove> result = boardHelper.availableMove(board, blackBishop);
+        final List<PieceMove> result = availableMovement.availableMove(board, blackBishop);
 
         //THEN
         Assertions.assertThat(result).containsExactlyInAnyOrder(
@@ -623,7 +890,7 @@ public class BoardHelperTest {
     @Test
     public void itShouldCalculateWhiteBishopMoveWhenheIsPinned() {
         //GIVEN
-        final BoardBuilder boardBuilder = new BoardBuilder();
+        final Move move = new Move();
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 4, 5);
         final Piece whiteBishop = new Piece(Color.WHITE, Type.BISHOP, 3, 4);
         final Piece blackQueen = new Piece(Color.BLACK, Type.QUEEN, 0, 1);
@@ -632,10 +899,10 @@ public class BoardHelperTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackQueen),
                 Color.WHITE);
-        final BoardHelper boardHelper = new BoardHelper(boardBuilder);
+        final AvailableMovement availableMovement = new AvailableMovement(move);
 
         //WHEN
-        final List<PieceMove> result = boardHelper.availableMove(board, whiteBishop);
+        final List<PieceMove> result = availableMovement.availableMove(board, whiteBishop);
 
         //THEN
         Assertions.assertThat(result).containsExactlyInAnyOrder(
@@ -648,7 +915,7 @@ public class BoardHelperTest {
     @Test
     public void itShouldCalculateBlackBishopMoveWhenheIsPinned() {
         //GIVEN
-        final BoardBuilder boardBuilder = new BoardBuilder();
+        final Move move = new Move();
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 4, 5);
         final Piece blackBishop = new Piece(Color.BLACK, Type.BISHOP, 3, 4);
         final Piece whiteQueen = new Piece(Color.WHITE, Type.QUEEN, 0, 1);
@@ -657,10 +924,10 @@ public class BoardHelperTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackKing, blackBishop),
                 Color.BLACK);
-        final BoardHelper boardHelper = new BoardHelper(boardBuilder);
+        final AvailableMovement availableMovement = new AvailableMovement(move);
 
         //WHEN
-        final List<PieceMove> result = boardHelper.availableMove(board,blackBishop);
+        final List<PieceMove> result = availableMovement.availableMove(board,blackBishop);
 
         //THEN
         Assertions.assertThat(result).containsExactlyInAnyOrder(
@@ -679,7 +946,7 @@ public class BoardHelperTest {
     @Test
     public void itShouldCalculateWhiteRockMoves() {
         //GIVEN
-        final BoardBuilder boardBuilder = new BoardBuilder();
+        final Move move = new Move();
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 4, 4);
         final Piece whiteRock = new Piece(Color.WHITE, Type.ROCK, 3, 3);
         final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
@@ -687,10 +954,10 @@ public class BoardHelperTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 Collections.emptyList(),
                 Color.WHITE);
-        final BoardHelper boardHelper = new BoardHelper(boardBuilder);
+        final AvailableMovement availableMovement = new AvailableMovement(move);
 
         //WHEN
-        final List<PieceMove> result = boardHelper.availableMove(board, whiteRock);
+        final List<PieceMove> result = availableMovement.availableMove(board, whiteRock);
 
         //THEN
         Assertions.assertThat(result).containsExactlyInAnyOrder(
@@ -717,7 +984,7 @@ public class BoardHelperTest {
     @Test
     public void itShouldCalculateWhiteRockMovesWithBlackAndWhitePieces() {
         //GIVEN
-        final BoardBuilder boardBuilder = new BoardBuilder();
+        final Move move = new Move();
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 3, 4);
         final Piece whiteRock = new Piece(Color.WHITE, Type.ROCK, 3, 3);
         final Piece blackRock = new Piece(Color.BLACK, Type.ROCK, 5, 3);
@@ -727,10 +994,10 @@ public class BoardHelperTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackPon, blackRock),
                 Color.WHITE);
-        final BoardHelper boardHelper = new BoardHelper(boardBuilder);
+        final AvailableMovement availableMovement = new AvailableMovement(move);
 
         //WHEN
-        final List<PieceMove> result = boardHelper.availableMove(board, whiteRock);
+        final List<PieceMove> result = availableMovement.availableMove(board, whiteRock);
 
         //THEN
         Assertions.assertThat(result).containsExactlyInAnyOrder(
@@ -749,7 +1016,7 @@ public class BoardHelperTest {
     @Test
     public void itShouldCalculateWhiteRockMovesIfPinned() {
         //GIVEN
-        final BoardBuilder boardBuilder = new BoardBuilder();
+        final Move move = new Move();
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 3, 4);
         final Piece whiteRock = new Piece(Color.WHITE, Type.ROCK, 3, 3);
         final Piece blackRock = new Piece(Color.BLACK, Type.ROCK, 3, 0);
@@ -758,10 +1025,10 @@ public class BoardHelperTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackRock),
                 Color.WHITE);
-        final BoardHelper boardHelper = new BoardHelper(boardBuilder);
+        final AvailableMovement availableMovement = new AvailableMovement(move);
 
         //WHEN
-        final List<PieceMove> result = boardHelper.availableMove(board, whiteRock);
+        final List<PieceMove> result = availableMovement.availableMove(board, whiteRock);
 
         //THEN
         Assertions.assertThat(result).containsExactlyInAnyOrder(
@@ -774,7 +1041,7 @@ public class BoardHelperTest {
     @Test
     public void itShouldCalculateBlackRockMoves() {
         //GIVEN
-        final BoardBuilder boardBuilder = new BoardBuilder();
+        final Move move = new Move();
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 4, 4);
         final Piece blackRock = new Piece(Color.BLACK, Type.ROCK, 3, 3);
         final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
@@ -782,10 +1049,10 @@ public class BoardHelperTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackKing, blackRock),
                 Color.BLACK);
-        final BoardHelper boardHelper = new BoardHelper(boardBuilder);
+        final AvailableMovement availableMovement = new AvailableMovement(move);
 
         //WHEN
-        final List<PieceMove> result = boardHelper.availableMove(board,blackRock);
+        final List<PieceMove> result = availableMovement.availableMove(board,blackRock);
 
         //THEN
         Assertions.assertThat(result).containsExactlyInAnyOrder(
@@ -812,7 +1079,7 @@ public class BoardHelperTest {
     @Test
     public void itShouldCalculateBlackRockMovesWithBlackAndWhitePieces() {
         //GIVEN
-        final BoardBuilder boardBuilder = new BoardBuilder();
+        final Move move = new Move();
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 3, 4);
         final Piece blackRock = new Piece(Color.BLACK, Type.ROCK, 3, 3);
         final Piece whiteRock = new Piece(Color.WHITE, Type.ROCK, 5, 3);
@@ -822,10 +1089,10 @@ public class BoardHelperTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackKing, blackRock),
                 Color.BLACK);
-        final BoardHelper boardHelper = new BoardHelper(boardBuilder);
+        final AvailableMovement availableMovement = new AvailableMovement(move);
 
         //WHEN
-        final List<PieceMove> result = boardHelper.availableMove(board, blackRock);
+        final List<PieceMove> result = availableMovement.availableMove(board, blackRock);
 
         //THEN
         Assertions.assertThat(result).containsExactlyInAnyOrder(
@@ -844,7 +1111,7 @@ public class BoardHelperTest {
     @Test
     public void itShouldCalculateBlackRockMovesIfPinned() {
         //GIVEN
-        final BoardBuilder boardBuilder = new BoardBuilder();
+        final Move move = new Move();
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 3, 4);
         final Piece blackRock = new Piece(Color.BLACK, Type.ROCK, 3, 3);
         final Piece whiteRock = new Piece(Color.WHITE, Type.ROCK, 3, 0);
@@ -853,10 +1120,10 @@ public class BoardHelperTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackKing, blackRock),
                 Color.BLACK);
-        final BoardHelper boardHelper = new BoardHelper(boardBuilder);
+        final AvailableMovement availableMovement = new AvailableMovement(move);
 
         //WHEN
-        final List<PieceMove> result = boardHelper.availableMove(board, blackRock);
+        final List<PieceMove> result = availableMovement.availableMove(board, blackRock);
 
         //THEN
         Assertions.assertThat(result).containsExactlyInAnyOrder(
@@ -875,7 +1142,7 @@ public class BoardHelperTest {
     @Test
     public void itShouldCalculateWhitePonMove() {
         //GIVEN
-        final BoardBuilder boardBuilder = new BoardBuilder();
+        final Move move = new Move();
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 3, 4);
         final Piece whitePon = new Piece(Color.WHITE, Type.PON, 4, 0);
         final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
@@ -883,57 +1150,57 @@ public class BoardHelperTest {
                 new Player(Color.WHITE, Collections.emptyList()),
                 Collections.emptyList(),
                 Color.WHITE);
-        final BoardHelper boardHelper = new BoardHelper(boardBuilder);
+        final AvailableMovement availableMovement = new AvailableMovement(move);
 
         //WHEN
-        final List<PieceMove> result = boardHelper.availableMove(board, whitePon);
+        final List<PieceMove> result = availableMovement.availableMove(board, whitePon);
 
         //THEN
         Assertions.assertThat(result).containsExactlyInAnyOrder(
-                new PieceMove(whitePon, new Piece(Color.WHITE, Type.PON, 3, 0))
+                new PieceMove(whitePon, new Piece(Color.WHITE, Type.PON, 5, 0))
         );
     }
 
     @Test
     public void itShouldCalculateWhitePonMoveWithDefaultPosition() {
         //GIVEN
-        final BoardBuilder boardBuilder = new BoardBuilder();
+        final Move move = new Move();
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 3, 4);
-        final Piece whitePon = new Piece(Color.WHITE, Type.PON, 6, 0);
+        final Piece whitePon = new Piece(Color.WHITE, Type.PON, 1, 0);
         final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
                 List.of(whiteKing, whitePon),
                 new Player(Color.WHITE, Collections.emptyList()),
                 Collections.emptyList(),
                 Color.WHITE);
-        final BoardHelper boardHelper = new BoardHelper(boardBuilder);
+        final AvailableMovement availableMovement = new AvailableMovement(move);
 
         //WHEN
-        final List<PieceMove> result = boardHelper.availableMove(board, whitePon);
+        final List<PieceMove> result = availableMovement.availableMove(board, whitePon);
 
         //THEN
         Assertions.assertThat(result).containsExactlyInAnyOrder(
-                new PieceMove(whitePon, new Piece(Color.WHITE, Type.PON, 5, 0)),
-                new PieceMove(whitePon, new Piece(Color.WHITE, Type.PON, 4, 0))
+                new PieceMove(whitePon, new Piece(Color.WHITE, Type.PON, 2, 0)),
+                new PieceMove(whitePon, new Piece(Color.WHITE, Type.PON, 3, 0))
         );
     }
 
     @Test
     public void itShouldCalculateWhitePonMoveWithWhiteAndBlackPiece() {
         //GIVEN
-        final BoardBuilder boardBuilder = new BoardBuilder();
+        final Move move = new Move();
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 0, 4);
-        final Piece whitePon = new Piece(Color.WHITE, Type.PON, 6, 1);
-        final Piece blackPon = new Piece(Color.BLACK, Type.PON, 4, 1);
+        final Piece whitePon = new Piece(Color.WHITE, Type.PON, 4, 1);
+        final Piece blackPon = new Piece(Color.BLACK, Type.PON, 6, 1);
         final Piece blackQueen = new Piece(Color.BLACK, Type.QUEEN, 5, 2);
         final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
                 List.of(whiteKing, whitePon),
                 new Player(Color.WHITE, Collections.emptyList()),
                 List.of(blackPon, blackQueen),
                 Color.WHITE);
-        final BoardHelper boardHelper = new BoardHelper(boardBuilder);
+        final AvailableMovement availableMovement = new AvailableMovement(move);
 
         //WHEN
-        final List<PieceMove> result = boardHelper.availableMove(board, whitePon);
+        final List<PieceMove> result = availableMovement.availableMove(board, whitePon);
 
         //THEN
         Assertions.assertThat(result).containsExactlyInAnyOrder(
@@ -947,7 +1214,7 @@ public class BoardHelperTest {
     @Test
     public void itShouldCalculateBlackPonMove() {
         //GIVEN
-        final BoardBuilder boardBuilder = new BoardBuilder();
+        final Move move = new Move();
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 3, 4);
         final Piece blackPon = new Piece(Color.BLACK, Type.PON, 4, 0);
         final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
@@ -955,62 +1222,62 @@ public class BoardHelperTest {
                 new Player(Color.WHITE, Collections.emptyList()),
                 List.of(blackKing, blackPon),
                 Color.BLACK);
-        final BoardHelper boardHelper = new BoardHelper(boardBuilder);
+        final AvailableMovement availableMovement = new AvailableMovement(move);
 
         //WHEN
-        final List<PieceMove> result = boardHelper.availableMove(board, blackPon);
+        final List<PieceMove> result = availableMovement.availableMove(board, blackPon);
 
         //THEN
         Assertions.assertThat(result).containsExactlyInAnyOrder(
-                new PieceMove(blackPon, new Piece(Color.BLACK, Type.PON, 5, 0))
+                new PieceMove(blackPon, new Piece(Color.BLACK, Type.PON, 3, 0))
         );
     }
 
     @Test
     public void itShouldCalculateBlackPonMoveWithDefaultPosition() {
         //GIVEN
-        final BoardBuilder boardBuilder = new BoardBuilder();
+        final Move move = new Move();
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 3, 4);
-        final Piece blackPon = new Piece(Color.BLACK, Type.PON, 1, 0);
+        final Piece blackPon = new Piece(Color.BLACK, Type.PON, 6, 0);
         final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
                 Collections.emptyList(),
                 new Player(Color.WHITE, Collections.emptyList()),
                 List.of(blackKing, blackPon),
                 Color.BLACK);
-        final BoardHelper boardHelper = new BoardHelper(boardBuilder);
+        final AvailableMovement availableMovement = new AvailableMovement(move);
 
         //WHEN
-        final List<PieceMove> result = boardHelper.availableMove(board, blackPon);
+        final List<PieceMove> result = availableMovement.availableMove(board, blackPon);
 
         //THEN
         Assertions.assertThat(result).containsExactlyInAnyOrder(
-                new PieceMove(blackPon, new Piece(Color.BLACK, Type.PON, 2, 0)),
-                new PieceMove(blackPon, new Piece(Color.BLACK, Type.PON, 3, 0))
+                new PieceMove(blackPon, new Piece(Color.BLACK, Type.PON, 5, 0)),
+                new PieceMove(blackPon, new Piece(Color.BLACK, Type.PON, 4, 0))
         );
     }
 
     @Test
     public void itShouldCalculateBlackPonMoveWithWhiteAndBlackPiece() {
         //GIVEN
-        final BoardBuilder boardBuilder = new BoardBuilder();
+        final Move move = new Move();
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 1, 4);
-        final Piece blackPon = new Piece(Color.BLACK, Type.PON, 1, 1);
-        final Piece whitePon = new Piece(Color.WHITE, Type.PON, 3, 1);
-        final Piece whiteQueen = new Piece(Color.WHITE, Type.QUEEN, 2, 2);
+        final Piece blackPon = new Piece(Color.BLACK, Type.PON, 6, 1);
+        final Piece whitePon = new Piece(Color.WHITE, Type.PON, 4, 1);
+        final Piece whiteQueen = new Piece(Color.WHITE, Type.QUEEN, 5, 2);
         final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
                 List.of(whiteQueen, whitePon),
                 new Player(Color.WHITE, Collections.emptyList()),
                 List.of(blackPon, blackKing),
                 Color.BLACK);
-        final BoardHelper boardHelper = new BoardHelper(boardBuilder);
+        final AvailableMovement availableMovement = new AvailableMovement(move);
 
         //WHEN
-        final List<PieceMove> result = boardHelper.availableMove(board, blackPon);
+        final List<PieceMove> result = availableMovement.availableMove(board, blackPon);
 
         //THEN
         Assertions.assertThat(result).containsExactlyInAnyOrder(
-                new PieceMove(blackPon, new Piece(Color.BLACK, Type.PON, 2, 1)),
-                new PieceMove(blackPon, new Piece(Color.BLACK, Type.PON, 2, 2), whiteQueen)
+                new PieceMove(blackPon, new Piece(Color.BLACK, Type.PON, 5, 1)),
+                new PieceMove(blackPon, new Piece(Color.BLACK, Type.PON, 5, 2), whiteQueen)
         );
     }
 

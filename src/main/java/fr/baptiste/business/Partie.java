@@ -2,26 +2,26 @@ package fr.baptiste.business;
 
 import fr.baptiste.business.port.PlayerStrategy;
 import fr.baptiste.domain.*;
-import fr.baptiste.utilities.BoardHelper;
+import fr.baptiste.business.utilities.AvailableMovement;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class Partie {
-    private final BoardHelper boardHelper;
+    private final AvailableMovement availableMovement;
     private final PlayerStrategy strategyPlayer1;
     private final PlayerStrategy strategyPlayer2;
     private Board board;
 
-    public Partie(BoardHelper boardHelper, PlayerStrategy strategyPlayer1, PlayerStrategy strategyPlayer2) {
-        this.boardHelper = boardHelper;
+    public Partie(AvailableMovement availableMovement, PlayerStrategy strategyPlayer1, PlayerStrategy strategyPlayer2) {
+        this.availableMovement = availableMovement;
         this.strategyPlayer1 = strategyPlayer1;
         this.strategyPlayer2 = strategyPlayer2;
         this.initBoard();
     }
 
     public void play() {
-        while (!boardHelper.isThereAWinner(board)) {
+        while (!availableMovement.isThereAWinner(board)) {
             if (board.getTempo().equals(Color.WHITE)) {
                 board = strategyPlayer1.playAMove(board);
             } else {

@@ -1,15 +1,18 @@
 package fr.baptiste.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
-public class Player {
+public class Player implements Cloneable {
     private Color color;
     private List<Piece> piecesCapture;
 
     public Player(Color color, List<Piece> piecesCapture) {
         this.color = color;
-        this.piecesCapture = piecesCapture;
+        this.piecesCapture = new ArrayList<>();
+        this.piecesCapture.addAll(piecesCapture);
     }
 
     public Color getColor() {
@@ -24,8 +27,8 @@ public class Player {
         return piecesCapture;
     }
 
-    public void setPiecesCapture(List<Piece> piecesCapture) {
-        this.piecesCapture = piecesCapture;
+    public void addPiecesCapture(Piece piece) {
+        this.piecesCapture.add(piece);
     }
 
     @Override
@@ -48,5 +51,10 @@ public class Player {
                 "color=" + color +
                 ", piecesCapture=" + piecesCapture +
                 '}';
+    }
+
+    @Override
+    protected Player clone() throws CloneNotSupportedException {
+        return new Player(this.color, this.getPiecesCapture().stream().map(Piece::clone).collect(Collectors.toList()));
     }
 }
