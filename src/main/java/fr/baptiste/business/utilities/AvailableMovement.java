@@ -113,38 +113,45 @@ public class AvailableMovement {
         pieceMove = addPotentialMove(board, king, king.getLigne() + 1, king.getColonne() + 1);
         pieceMove.ifPresent(result::add);
 
-
-        //todo on ne peut castle que si aucune pièce adverse ne peut bouger sur les cases entre le roi et la tour
-        if(!isKingCheck(board, king.getColor())) {
+        if (!isKingCheck(board, king.getColor())) {
             if (canKingCastleRight(board, king)) {
-                if (Color.WHITE.equals(king.getColor())) {
-                    result.add(new PieceMove(
-                            Arrays.asList(king, getPieceAtThisPosition(board, 0, 7, Color.WHITE).orElseThrow(() -> new cantFindPieceException(Type.ROCK, Color.WHITE, 0, 7))),
-                            Arrays.asList(new Piece(Color.WHITE, Type.KING, 0, 6), new Piece(Color.WHITE, Type.ROCK, 0, 5))
-                    ));
-                } else {
-                    result.add(new PieceMove(
-                            Arrays.asList(king, getPieceAtThisPosition(board, 7, 7, Color.BLACK).orElseThrow(() -> new cantFindPieceException(Type.ROCK, Color.BLACK, 7, 7))),
-                            Arrays.asList(new Piece(Color.BLACK, Type.KING, 7, 6), new Piece(Color.BLACK, Type.ROCK, 7, 5))
-                    ));
+                if (noEnemyPieceTargetCastle(board, king)) {
+                    if (Color.WHITE.equals(king.getColor())) {
+                        result.add(new PieceMove(
+                                Arrays.asList(king, getPieceAtThisPosition(board, 0, 7, Color.WHITE).orElseThrow(() -> new cantFindPieceException(Type.ROCK, Color.WHITE, 0, 7))),
+                                Arrays.asList(new Piece(Color.WHITE, Type.KING, 0, 6), new Piece(Color.WHITE, Type.ROCK, 0, 5))
+                        ));
+                    } else {
+                        result.add(new PieceMove(
+                                Arrays.asList(king, getPieceAtThisPosition(board, 7, 7, Color.BLACK).orElseThrow(() -> new cantFindPieceException(Type.ROCK, Color.BLACK, 7, 7))),
+                                Arrays.asList(new Piece(Color.BLACK, Type.KING, 7, 6), new Piece(Color.BLACK, Type.ROCK, 7, 5))
+                        ));
+                    }
                 }
             }
             if (canKingCastleLeft(board, king)) {
-                if (Color.WHITE.equals(king.getColor())) {
-                    result.add(new PieceMove(
-                            Arrays.asList(king, getPieceAtThisPosition(board, 0, 0, Color.WHITE).orElseThrow(() -> new cantFindPieceException(Type.ROCK, Color.WHITE, 0, 0))),
-                            Arrays.asList(new Piece(Color.WHITE, Type.KING, 0, 2), new Piece(Color.WHITE, Type.ROCK, 0, 3))
-                    ));
-                } else {
-                    result.add(new PieceMove(
-                            Arrays.asList(king, getPieceAtThisPosition(board, 7, 0, Color.BLACK).orElseThrow(() -> new cantFindPieceException(Type.ROCK, Color.BLACK, 7, 0))),
-                            Arrays.asList(new Piece(Color.BLACK, Type.KING, 7, 2), new Piece(Color.BLACK, Type.ROCK, 7, 3))
-                    ));
+                if (noEnemyPieceTargetCastle(board, king)) {
+                    if (Color.WHITE.equals(king.getColor())) {
+                        result.add(new PieceMove(
+                                Arrays.asList(king, getPieceAtThisPosition(board, 0, 0, Color.WHITE).orElseThrow(() -> new cantFindPieceException(Type.ROCK, Color.WHITE, 0, 0))),
+                                Arrays.asList(new Piece(Color.WHITE, Type.KING, 0, 2), new Piece(Color.WHITE, Type.ROCK, 0, 3))
+                        ));
+                    } else {
+                        result.add(new PieceMove(
+                                Arrays.asList(king, getPieceAtThisPosition(board, 7, 0, Color.BLACK).orElseThrow(() -> new cantFindPieceException(Type.ROCK, Color.BLACK, 7, 0))),
+                                Arrays.asList(new Piece(Color.BLACK, Type.KING, 7, 2), new Piece(Color.BLACK, Type.ROCK, 7, 3))
+                        ));
+                    }
                 }
             }
         }
 
         return result;
+    }
+
+    //todo on ne peut castle que si aucune pièce adverse ne peut bouger sur les cases entre le roi et la tour
+    private boolean noEnemyPieceTargetCastle(Board board, Piece king) {
+        return true;
     }
 
     private List<PieceMove> kingAvailableTakenMove(Board board, Piece king) {
@@ -193,7 +200,7 @@ public class AvailableMovement {
         for (int ligne = piece.getLigne() + 1; ligne < 8; ligne++) {
             pieceMove = addPotentialMove(board, piece, ligne, piece.getColonne());
             pieceMove.ifPresent(result::add);
-            if(this.isThereObstacle(board, ligne, piece.getColonne())) {
+            if (this.isThereObstacle(board, ligne, piece.getColonne())) {
                 break;
             }
         }
@@ -228,21 +235,21 @@ public class AvailableMovement {
         List<PieceMove> result = new ArrayList<>();
         Optional<PieceMove> pieceMove;
 
-        pieceMove = addPotentialMove(board, piece,piece.getLigne() - 2, piece.getColonne() + 1);
+        pieceMove = addPotentialMove(board, piece, piece.getLigne() - 2, piece.getColonne() + 1);
         pieceMove.ifPresent(result::add);
-        pieceMove = addPotentialMove(board, piece,piece.getLigne() - 2, piece.getColonne() - 1);
+        pieceMove = addPotentialMove(board, piece, piece.getLigne() - 2, piece.getColonne() - 1);
         pieceMove.ifPresent(result::add);
-        pieceMove = addPotentialMove(board, piece,piece.getLigne() + 2, piece.getColonne() + 1);
+        pieceMove = addPotentialMove(board, piece, piece.getLigne() + 2, piece.getColonne() + 1);
         pieceMove.ifPresent(result::add);
-        pieceMove = addPotentialMove(board, piece,piece.getLigne() + 2, piece.getColonne() - 1);
+        pieceMove = addPotentialMove(board, piece, piece.getLigne() + 2, piece.getColonne() - 1);
         pieceMove.ifPresent(result::add);
-        pieceMove = addPotentialMove(board, piece,piece.getLigne() + 1, piece.getColonne() - 2);
+        pieceMove = addPotentialMove(board, piece, piece.getLigne() + 1, piece.getColonne() - 2);
         pieceMove.ifPresent(result::add);
-        pieceMove = addPotentialMove(board, piece,piece.getLigne() - 1, piece.getColonne() - 2);
+        pieceMove = addPotentialMove(board, piece, piece.getLigne() - 1, piece.getColonne() - 2);
         pieceMove.ifPresent(result::add);
-        pieceMove = addPotentialMove(board, piece,piece.getLigne() + 1, piece.getColonne() + 2);
+        pieceMove = addPotentialMove(board, piece, piece.getLigne() + 1, piece.getColonne() + 2);
         pieceMove.ifPresent(result::add);
-        pieceMove = addPotentialMove(board, piece,piece.getLigne() - 1, piece.getColonne() + 2);
+        pieceMove = addPotentialMove(board, piece, piece.getLigne() - 1, piece.getColonne() + 2);
         pieceMove.ifPresent(result::add);
 
         return result;
@@ -313,14 +320,14 @@ public class AvailableMovement {
         if (piece.getColor().equals(Color.WHITE)) {
             //le pion peut avancer d'une case
             pieceMove = addPotentialMove(board, piece, piece.getLigne() + 1, piece.getColonne());
-            if(pieceMove.isPresent() && pieceMove.get().getPieceCaptured().isEmpty()) {
+            if (pieceMove.isPresent() && pieceMove.get().getPieceCaptured().isEmpty()) {
                 result.add(pieceMove.get());
             }
 
             //le pion peut se déplacer de 2 cases en avant quand il n'a jamais été joué
             if (piece.getLigne() == 1) {
                 pieceMove = addPotentialMove(board, piece, piece.getLigne() + 2, piece.getColonne());
-                if(pieceMove.isPresent() && pieceMove.get().getPieceCaptured().isEmpty()) {
+                if (pieceMove.isPresent() && pieceMove.get().getPieceCaptured().isEmpty()) {
                     result.add(pieceMove.get());
                 }
             }
@@ -339,12 +346,12 @@ public class AvailableMovement {
             //prise en passant
             if (this.isLastMoveATwoCaseForwardForPon(board)) {
                 //prise en passant à gauche
-                if ((piece.getColonne() - 1) == board.getHistory().get(board.getHistory().size() + 1).getPieceAfterMove().get(0).getColonne()) {
+                if ((piece.getColonne() - 1) == board.getHistory().get(board.getHistory().size() - 1).getPieceAfterMove().get(0).getColonne()) {
                     pieceMove = addPotentialMove(board, piece, piece.getLigne() + 1, piece.getColonne() - 1);
                     pieceMove.ifPresent(result::add);
                 }
                 //prise en passant à droite
-                if ((piece.getColonne() + 1) == board.getHistory().get(board.getHistory().size() + 1).getPieceAfterMove().get(0).getColonne()) {
+                if ((piece.getColonne() + 1) == board.getHistory().get(board.getHistory().size() - 1).getPieceAfterMove().get(0).getColonne()) {
                     pieceMove = addPotentialMove(board, piece, piece.getLigne() + 1, piece.getColonne() + 1);
                     pieceMove.ifPresent(result::add);
                 }
@@ -352,14 +359,14 @@ public class AvailableMovement {
         } else {
             //le pion peut avancer d'une case
             pieceMove = addPotentialMove(board, piece, piece.getLigne() - 1, piece.getColonne());
-            if(pieceMove.isPresent() && pieceMove.get().getPieceCaptured().isEmpty()) {
+            if (pieceMove.isPresent() && pieceMove.get().getPieceCaptured().isEmpty()) {
                 result.add(pieceMove.get());
             }
 
             //le pion peut se déplacer de 2 cases en avant quand il n'a jamais été joué
             if (piece.getLigne() == 6) {
                 pieceMove = addPotentialMove(board, piece, piece.getLigne() - 2, piece.getColonne());
-                if(pieceMove.isPresent() && pieceMove.get().getPieceCaptured().isEmpty()) {
+                if (pieceMove.isPresent() && pieceMove.get().getPieceCaptured().isEmpty()) {
                     result.add(pieceMove.get());
                 }
             }
@@ -411,12 +418,12 @@ public class AvailableMovement {
             //prise en passant
             if (this.isLastMoveATwoCaseForwardForPon(board)) {
                 //prise en passant à gauche
-                if ((piece.getColonne() - 1) == board.getHistory().get(board.getHistory().size() + 1).getPieceAfterMove().get(0).getColonne()) {
+                if ((piece.getColonne() - 1) == board.getHistory().get(board.getHistory().size() - 1).getPieceAfterMove().get(0).getColonne()) {
                     pieceMove = addPotentialMove(board, piece, piece.getLigne() + 1, piece.getColonne() - 1);
                     pieceMove.ifPresent(result::add);
                 }
                 //prise en passant à droite
-                if ((piece.getColonne() + 1) == board.getHistory().get(board.getHistory().size() + 1).getPieceAfterMove().get(0).getColonne()) {
+                if ((piece.getColonne() + 1) == board.getHistory().get(board.getHistory().size() - 1).getPieceAfterMove().get(0).getColonne()) {
                     pieceMove = addPotentialMove(board, piece, piece.getLigne() + 1, piece.getColonne() + 1);
                     pieceMove.ifPresent(result::add);
                 }
@@ -574,16 +581,16 @@ public class AvailableMovement {
     }
 
     private boolean isLastMoveATwoCaseForwardForPon(Board board) {
-        if(!board.getHistory().isEmpty()) {
+        if (!board.getHistory().isEmpty()) {
             PieceMove pieceMove = board.getHistory().get(board.getHistory().size() - 1);
             if (Color.WHITE.equals(pieceMove.getPieceAfterMove().get(0).getColor())) {
                 if (Type.PON.equals(pieceMove.getPieceAfterMove().get(0).getType()) &&
-                        pieceMove.getPieceAfterMove().get(0).getLigne() == 3) {
+                        pieceMove.getPieceAfterMove().get(0).getLigne() == pieceMove.getPieceBeforeMove().get(0).getLigne() + 2) {
                     return true;
                 }
             } else {
                 if (Type.PON.equals(pieceMove.getPieceAfterMove().get(0).getType()) &&
-                        pieceMove.getPieceAfterMove().get(0).getLigne() == 4) {
+                        pieceMove.getPieceAfterMove().get(0).getLigne() == pieceMove.getPieceBeforeMove().get(0).getLigne() - 2) {
                     return true;
                 }
             }
@@ -591,13 +598,12 @@ public class AvailableMovement {
         return false;
     }
 
-
     private boolean canKingCastleRight(Board board, Piece king) {
         boolean kingHasNeverBeenPlayed = board.getHistory().stream()
                 .flatMap(pieceMove -> pieceMove.getPieceBeforeMove().stream())
                 .noneMatch(pieceMove -> pieceMove.getColor().equals(king.getColor()) &&
                         Type.KING.equals(pieceMove.getType()));
-        if(Color.WHITE.equals(king.getColor())) {
+        if (Color.WHITE.equals(king.getColor())) {
             boolean rightRockHasNeverBeenPlayed = board.getHistory().stream()
                     .flatMap(pieceMove -> pieceMove.getPieceBeforeMove().stream())
                     .noneMatch(pieceMove -> pieceMove.getColonne() == 7 &&
@@ -623,7 +629,7 @@ public class AvailableMovement {
                 .flatMap(pieceMove -> pieceMove.getPieceBeforeMove().stream())
                 .noneMatch(pieceMove -> pieceMove.getColor().equals(king.getColor()) &&
                         Type.KING.equals(pieceMove.getType()));
-        if(Color.WHITE.equals(king.getColor())) {
+        if (Color.WHITE.equals(king.getColor())) {
             boolean leftRockHasNeverBeenPlayed = board.getHistory().stream()
                     .flatMap(pieceMove -> pieceMove.getPieceBeforeMove().stream())
                     .noneMatch(pieceMove -> pieceMove.getColonne() == 0 &&

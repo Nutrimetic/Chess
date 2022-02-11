@@ -1147,7 +1147,7 @@ public class availableMovementTest {
         final Piece whitePon = new Piece(Color.WHITE, Type.PON, 4, 0);
         final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
                 List.of(whiteKing, whitePon),
-                new Player(Color.WHITE, Collections.emptyList()),
+                new Player(Color.BLACK, Collections.emptyList()),
                 Collections.emptyList(),
                 Color.WHITE);
         final AvailableMovement availableMovement = new AvailableMovement(move);
@@ -1169,7 +1169,7 @@ public class availableMovementTest {
         final Piece whitePon = new Piece(Color.WHITE, Type.PON, 1, 0);
         final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
                 List.of(whiteKing, whitePon),
-                new Player(Color.WHITE, Collections.emptyList()),
+                new Player(Color.BLACK, Collections.emptyList()),
                 Collections.emptyList(),
                 Color.WHITE);
         final AvailableMovement availableMovement = new AvailableMovement(move);
@@ -1194,7 +1194,7 @@ public class availableMovementTest {
         final Piece blackQueen = new Piece(Color.BLACK, Type.QUEEN, 5, 2);
         final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
                 List.of(whiteKing, whitePon),
-                new Player(Color.WHITE, Collections.emptyList()),
+                new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackPon, blackQueen),
                 Color.WHITE);
         final AvailableMovement availableMovement = new AvailableMovement(move);
@@ -1209,7 +1209,30 @@ public class availableMovementTest {
         );
     }
 
-    //todo faire un test de prise en passant
+    @Test
+    public void itShouldCalculateWhiteEnPassant() {
+        //GIVEN
+        final Move move = new Move();
+        final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 0, 4);
+        final Piece whitePon = new Piece(Color.WHITE, Type.PON, 4, 1);
+        final Piece blackPon = new Piece(Color.BLACK, Type.PON, 4, 2);
+        final Piece blackKing = new Piece(Color.BLACK, Type.KING, 7, 7);
+        final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
+                List.of(whiteKing, whitePon),
+                new Player(Color.BLACK, Collections.emptyList()),
+                List.of(blackPon, blackKing),
+                Color.WHITE);
+        final AvailableMovement availableMovement = new AvailableMovement(move);
+        board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.BLACK, Type.PON, 6, 2), blackPon)));
+
+        //WHEN
+        final List<PieceMove> result = availableMovement.availableMove(board, whitePon);
+
+        //THEN
+        Assertions.assertThat(result).contains(
+                new PieceMove(whitePon, new Piece(Color.WHITE, Type.PON, 5, 2))
+        );
+    }
 
     @Test
     public void itShouldCalculateBlackPonMove() {
@@ -1281,6 +1304,29 @@ public class availableMovementTest {
         );
     }
 
-    //todo faire un test de prise en passant
+    @Test
+    public void itShouldCalculateBlackEnPassant() {
+        //GIVEN
+        final Move move = new Move();
+        final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 0, 4);
+        final Piece whitePon = new Piece(Color.WHITE, Type.PON, 3, 1);
+        final Piece blackPon = new Piece(Color.BLACK, Type.PON, 3, 2);
+        final Piece blackKing = new Piece(Color.BLACK, Type.KING, 7, 7);
+        final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
+                List.of(whiteKing, whitePon),
+                new Player(Color.BLACK, Collections.emptyList()),
+                List.of(blackPon, blackKing),
+                Color.BLACK);
+        final AvailableMovement availableMovement = new AvailableMovement(move);
+        board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.WHITE, Type.PON, 1, 1), whitePon)));
+
+        //WHEN
+        final List<PieceMove> result = availableMovement.availableMove(board, blackPon);
+
+        //THEN
+        Assertions.assertThat(result).contains(
+                new PieceMove(blackPon, new Piece(Color.BLACK, Type.PON, 2, 1))
+        );
+    }
 
 }
