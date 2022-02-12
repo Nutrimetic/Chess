@@ -38,6 +38,7 @@ public class AvailableMovement {
     }
 
     /**
+     * todo
      * Détermine si le board est dans un situation ou une égalité est définis
      * Voici la liste des cas de figure ou il y a égalité :
      * - Un des 2 joueurs n'a plus de coup disponible
