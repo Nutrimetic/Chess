@@ -18,9 +18,8 @@ public class AvailableMovement {
     }
 
     /**
-     * TODO
      * Détermine si le board est dans un situation ou un joueur à gagné.
-     * Afin de savoir si un joueur a gagné, il suffit de simuler tous les coups possibles du joueur qui a le tempo et de voir si le roi
+     * Afin de savoir si un joueur a gagné, il suffit de simuler tous les coups possibles du joueur qui a le tempo et de voir si le roi du joueur ayant le tempo
      * est toujours en état de prise après chaque coup.
      *
      * @param board
@@ -28,9 +27,26 @@ public class AvailableMovement {
      */
     public boolean isThereAWinner(Board board) {
         if (board.getTempo().equals(Color.WHITE)) {
-
+            return board.getPiecePlayerWhite().stream()
+                    .flatMap(piece -> this.availableMove(board, piece).stream())
+                    .allMatch(pieceMove -> isKingCheck(board, pieceMove));
+        } else {
+            return board.getPiecePlayerBlack().stream()
+                    .flatMap(piece -> this.availableMove(board, piece).stream())
+                    .allMatch(pieceMove -> isKingCheck(board, pieceMove));
         }
+    }
 
+    /**
+     * Détermine si le board est dans un situation ou une égalité est définis
+     * Voici la liste des cas de figure ou il y a égalité :
+     * - Un des 2 joueurs n'a plus de coup disponible
+     * - répétiton 3 fois des méme coups
+     *
+     * @param board
+     * @return true si il y a un draw
+     */
+    public boolean isThereADraw(Board board) {
         return false;
     }
 
@@ -115,13 +131,19 @@ public class AvailableMovement {
 
         if (!isKingCheck(board, king.getColor())) {
             if (canKingCastleRight(board, king)) {
-                if (noEnemyPieceTargetCastle(board, king)) {
-                    if (Color.WHITE.equals(king.getColor())) {
+                if (Color.WHITE.equals(king.getColor())) {
+                    if (!isTherePotentielMoveAtPosition(board, Color.BLACK, 0, 7) &&
+                            !isTherePotentielMoveAtPosition(board, Color.BLACK, 0, 6) &&
+                            !isTherePotentielMoveAtPosition(board, Color.BLACK, 0, 5)) {
                         result.add(new PieceMove(
                                 Arrays.asList(king, getPieceAtThisPosition(board, 0, 7, Color.WHITE).orElseThrow(() -> new cantFindPieceException(Type.ROCK, Color.WHITE, 0, 7))),
                                 Arrays.asList(new Piece(Color.WHITE, Type.KING, 0, 6), new Piece(Color.WHITE, Type.ROCK, 0, 5))
                         ));
-                    } else {
+                    }
+                } else {
+                    if (!isTherePotentielMoveAtPosition(board, Color.WHITE, 7, 7) &&
+                            !isTherePotentielMoveAtPosition(board, Color.WHITE, 7, 6) &&
+                            !isTherePotentielMoveAtPosition(board, Color.WHITE, 7, 5)) {
                         result.add(new PieceMove(
                                 Arrays.asList(king, getPieceAtThisPosition(board, 7, 7, Color.BLACK).orElseThrow(() -> new cantFindPieceException(Type.ROCK, Color.BLACK, 7, 7))),
                                 Arrays.asList(new Piece(Color.BLACK, Type.KING, 7, 6), new Piece(Color.BLACK, Type.ROCK, 7, 5))
@@ -130,13 +152,21 @@ public class AvailableMovement {
                 }
             }
             if (canKingCastleLeft(board, king)) {
-                if (noEnemyPieceTargetCastle(board, king)) {
-                    if (Color.WHITE.equals(king.getColor())) {
+                if (Color.WHITE.equals(king.getColor())) {
+                    if (!isTherePotentielMoveAtPosition(board, Color.BLACK, 0, 0) &&
+                            !isTherePotentielMoveAtPosition(board, Color.BLACK, 0, 1) &&
+                            !isTherePotentielMoveAtPosition(board, Color.BLACK, 0, 2) &&
+                            !isTherePotentielMoveAtPosition(board, Color.BLACK, 0, 3)) {
                         result.add(new PieceMove(
                                 Arrays.asList(king, getPieceAtThisPosition(board, 0, 0, Color.WHITE).orElseThrow(() -> new cantFindPieceException(Type.ROCK, Color.WHITE, 0, 0))),
                                 Arrays.asList(new Piece(Color.WHITE, Type.KING, 0, 2), new Piece(Color.WHITE, Type.ROCK, 0, 3))
                         ));
-                    } else {
+                    }
+                } else {
+                    if (!isTherePotentielMoveAtPosition(board, Color.WHITE, 7, 3) &&
+                            !isTherePotentielMoveAtPosition(board, Color.WHITE, 7, 2) &&
+                            !isTherePotentielMoveAtPosition(board, Color.WHITE, 7, 1) &&
+                            !isTherePotentielMoveAtPosition(board, Color.WHITE, 7, 0)) {
                         result.add(new PieceMove(
                                 Arrays.asList(king, getPieceAtThisPosition(board, 7, 0, Color.BLACK).orElseThrow(() -> new cantFindPieceException(Type.ROCK, Color.BLACK, 7, 0))),
                                 Arrays.asList(new Piece(Color.BLACK, Type.KING, 7, 2), new Piece(Color.BLACK, Type.ROCK, 7, 3))
@@ -149,9 +179,18 @@ public class AvailableMovement {
         return result;
     }
 
-    //todo on ne peut castle que si aucune pièce adverse ne peut bouger sur les cases entre le roi et la tour
-    private boolean noEnemyPieceTargetCastle(Board board, Piece king) {
-        return true;
+    private boolean isTherePotentielMoveAtPosition(Board board, Color color, int ligne, int colonne) {
+        if (color.equals(Color.WHITE)) {
+            return board.getPiecePlayerWhite().stream()
+                    .flatMap(piece -> this.availableMove(board, piece).stream())
+                    .anyMatch(pieceMove -> pieceMove.getPieceAfterMove().get(0).getLigne() == ligne &&
+                            pieceMove.getPieceAfterMove().get(0).getColonne() == colonne);
+        } else {
+            return board.getPiecePlayerBlack().stream()
+                    .flatMap(piece -> this.availableMove(board, piece).stream())
+                    .anyMatch(pieceMove -> pieceMove.getPieceAfterMove().get(0).getLigne() == ligne &&
+                            pieceMove.getPieceAfterMove().get(0).getColonne() == colonne);
+        }
     }
 
     private List<PieceMove> kingAvailableTakenMove(Board board, Piece king) {

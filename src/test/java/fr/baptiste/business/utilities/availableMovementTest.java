@@ -360,6 +360,36 @@ public class availableMovementTest {
     }
 
     @Test
+    public void itShouldCalculateWhiteLeftAndRightCastleWhenThereAreEnemyPieceLookingAtRock() {
+        //GIVEN
+        final Move move = new Move();
+        final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 0, 4);
+        final Piece whiteRock = new Piece(Color.WHITE, Type.ROCK, 0, 0);
+        final Piece whiteRock2 = new Piece(Color.WHITE, Type.ROCK, 0, 7);
+        final Piece blackKing = new Piece(Color.BLACK, Type.KING, 5, 5);
+        final Piece blackRock = new Piece(Color.BLACK, Type.ROCK, 6, 2);
+        final Piece blackRock2 = new Piece(Color.BLACK, Type.ROCK, 6, 6);
+        final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
+                List.of(whiteKing, whiteRock, whiteRock2),
+                new Player(Color.BLACK, Collections.emptyList()),
+                List.of(blackKing, blackRock, blackRock2),
+                Color.WHITE);
+        board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.BLACK, Type.KING, 0, 0), new Piece(Color.BLACK, Type.KING, 4, 0))));
+        final AvailableMovement availableMovement = new AvailableMovement(move);
+
+        //WHEN
+        final List<PieceMove> result = availableMovement.availableMove(board, whiteKing);
+
+        //THEN
+        Assertions.assertThat(result).containsExactlyInAnyOrder(
+                new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 0, 3)),
+                new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 0, 5)),
+                new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 1, 3)),
+                new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 1, 4)),
+                new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 1, 5)));
+    }
+
+    @Test
     public void itShouldCalculateBlackCastle() {
         //GIVEN
         final Move move = new Move();
@@ -481,6 +511,36 @@ public class availableMovementTest {
                 new PieceMove(blackKing, new Piece(Color.BLACK, Type.KING, 7, 3)),
                 new PieceMove(blackKing, new Piece(Color.BLACK, Type.KING, 7, 5)),
                 new PieceMove(blackKing, new Piece(Color.BLACK, Type.KING, 6, 3)),
+                new PieceMove(blackKing, new Piece(Color.BLACK, Type.KING, 6, 5)));
+    }
+
+    @Test
+    public void itShouldCalculateBlackLeftAndRightCastleWhenThereAreEnemyPieceLookingAtRock() {
+        //GIVEN
+        final Move move = new Move();
+        final Piece blackKing = new Piece(Color.BLACK, Type.KING, 7, 4);
+        final Piece blackRock = new Piece(Color.BLACK, Type.ROCK, 7, 0);
+        final Piece blackRock2 = new Piece(Color.BLACK, Type.ROCK, 7, 7);
+        final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 4, 5);
+        final Piece whiteRock = new Piece(Color.WHITE, Type.ROCK, 5, 2);
+        final Piece whiteRock2 = new Piece(Color.WHITE, Type.ROCK, 5, 6);
+        final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
+                List.of(whiteKing, whiteRock, whiteRock2),
+                new Player(Color.BLACK, Collections.emptyList()),
+                List.of(blackKing, blackRock, blackRock2),
+                Color.WHITE);
+        board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.WHITE, Type.KING, 0, 0), new Piece(Color.WHITE, Type.KING, 4, 0))));
+        final AvailableMovement availableMovement = new AvailableMovement(move);
+
+        //WHEN
+        final List<PieceMove> result = availableMovement.availableMove(board, blackKing);
+
+        //THEN
+        Assertions.assertThat(result).containsExactlyInAnyOrder(
+                new PieceMove(blackKing, new Piece(Color.BLACK, Type.KING, 7, 3)),
+                new PieceMove(blackKing, new Piece(Color.BLACK, Type.KING, 7, 5)),
+                new PieceMove(blackKing, new Piece(Color.BLACK, Type.KING, 6, 3)),
+                new PieceMove(blackKing, new Piece(Color.BLACK, Type.KING, 6, 4)),
                 new PieceMove(blackKing, new Piece(Color.BLACK, Type.KING, 6, 5)));
     }
 
@@ -1329,4 +1389,99 @@ public class availableMovementTest {
         );
     }
 
+    /************************************************************************************************************************
+     *
+     *                                                   ISKINGCHECK
+     *
+     ***********************************************************************************************************************/
+
+    @Test
+    public void itShouldDeclareWhiteWinner() {
+        //GIVEN
+        final Move move = new Move();
+        final Piece blackKing = new Piece(Color.BLACK, Type.KING, 0, 4);
+        final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 3, 2);
+        final Piece whiteRock1 = new Piece(Color.WHITE, Type.ROCK, 0, 2);
+        final Piece whiteRock2 = new Piece(Color.WHITE, Type.ROCK, 1, 7);
+        final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
+                List.of(whiteKing, whiteRock1, whiteRock2),
+                new Player(Color.BLACK, Collections.emptyList()),
+                List.of(blackKing),
+                Color.BLACK);
+        final AvailableMovement availableMovement = new AvailableMovement(move);
+
+        //WHEN
+        final boolean result = availableMovement.isThereAWinner(board);
+
+        //THEN
+        Assertions.assertThat(result).isTrue();
+    }
+
+    @Test
+    public void itShouldNotDeclareWhiteWinner() {
+        //GIVEN
+        final Move move = new Move();
+        final Piece blackKing = new Piece(Color.BLACK, Type.KING, 0, 4);
+        final Piece blackPon = new Piece(Color.BLACK, Type.PON, 1, 5);
+        final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 3, 2);
+        final Piece whiteRock1 = new Piece(Color.WHITE, Type.ROCK, 0, 2);
+        final Piece whiteRock2 = new Piece(Color.WHITE, Type.ROCK, 1, 7);
+        final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
+                List.of(whiteKing, whiteRock1, whiteRock2),
+                new Player(Color.BLACK, Collections.emptyList()),
+                List.of(blackKing, blackPon),
+                Color.BLACK);
+        final AvailableMovement availableMovement = new AvailableMovement(move);
+
+        //WHEN
+        final boolean result = availableMovement.isThereAWinner(board);
+
+        //THEN
+        Assertions.assertThat(result).isFalse();
+    }
+
+    @Test
+    public void itShouldDeclareBlackWinner() {
+        //GIVEN
+        final Move move = new Move();
+        final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 0, 4);
+        final Piece blackKing = new Piece(Color.BLACK, Type.KING, 3, 2);
+        final Piece blackRock1 = new Piece(Color.BLACK, Type.ROCK, 0, 2);
+        final Piece blackRock2 = new Piece(Color.BLACK, Type.ROCK, 1, 7);
+        final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
+                List.of(whiteKing),
+                new Player(Color.BLACK, Collections.emptyList()),
+                List.of(blackKing, blackRock1, blackRock2),
+                Color.WHITE);
+        final AvailableMovement availableMovement = new AvailableMovement(move);
+
+        //WHEN
+        final boolean result = availableMovement.isThereAWinner(board);
+
+        //THEN
+        Assertions.assertThat(result).isTrue();
+    }
+
+    @Test
+    public void itShouldNotDeclareBlackWinner() {
+        //GIVEN
+        final Move move = new Move();
+        final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 0, 4);
+        final Piece whitePon = new Piece(Color.WHITE, Type.PON, 1, 5);
+        final Piece blackKing = new Piece(Color.BLACK, Type.KING, 3, 2);
+        final Piece blackRock1 = new Piece(Color.BLACK, Type.ROCK, 0, 2);
+        final Piece blackRock2 = new Piece(Color.BLACK, Type.ROCK, 1, 7);
+        final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
+                List.of(whiteKing, whitePon),
+                new Player(Color.BLACK, Collections.emptyList()),
+                List.of(blackKing, blackRock1, blackRock2),
+                Color.WHITE);
+        final AvailableMovement availableMovement = new AvailableMovement(move);
+
+        //WHEN
+        final boolean result = availableMovement.isThereAWinner(board);
+
+        //THEN
+        Assertions.assertThat(result).isFalse();
+    }
 }
