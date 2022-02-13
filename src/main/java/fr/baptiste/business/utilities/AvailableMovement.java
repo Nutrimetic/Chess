@@ -78,8 +78,8 @@ public class AvailableMovement {
         if (notEnoughMaterial(board)) return true;
 
         //4 - 50 coups sans prise de pièces ou coup de pion
-        if(board.getHistory().size() >= 50) {
-            return board.getHistory().subList(board.getHistory().size() - 51, board.getHistory().size() - 1).stream()
+        if(board.getHistory().size() >= 100) {
+            return board.getHistory().subList(board.getHistory().size() - 101, board.getHistory().size() - 1).stream()
                     .anyMatch(pieceMove -> Type.PON.equals(pieceMove.getPieceBeforeMove().get(0).getType()) ||
                             pieceMove.getPieceCaptured().isPresent());
         }
