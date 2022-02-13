@@ -1,6 +1,7 @@
 package fr.baptiste.business.utilities;
 
 import fr.baptiste.domain.*;
+import fr.baptiste.domain.builder.BoardBuilder;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -21,6 +22,7 @@ public class availableMovementTest {
     public void itShouldCalculateKingMoveWithoutWhiteAndBlackPiece() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 4, 4);
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 0, 0);
         Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
@@ -30,7 +32,7 @@ public class availableMovementTest {
                 Color.WHITE);
         board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.WHITE, Type.KING, 3, 3), whiteKing)));
         board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.BLACK, Type.KING, 3, 3), blackKing)));
-        AvailableMovement availableMovement = new AvailableMovement(move);
+        AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, whiteKing);
@@ -47,40 +49,42 @@ public class availableMovementTest {
                 new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 5, 5)));
     }
 
-     @Test
+    @Test
     public void itShouldCalculateKingMoveWithWhitePiece() {
-         //GIVEN
-         final Move move = new Move();
-         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 4, 4);
-         final Piece bishop = new Piece(Color.WHITE, Type.BISHOP, 3, 4);
-         final Piece pon1 = new Piece(Color.WHITE, Type.BISHOP, 3, 3);
-         final Piece pon2 = new Piece(Color.WHITE, Type.BISHOP, 5, 4);
-         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 0, 0);
-         Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
-                 Arrays.asList(whiteKing, bishop, pon1, pon2),
-                 new Player(Color.BLACK, Collections.emptyList()),
-                 List.of(blackKing),
-                 Color.WHITE);
-         board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.WHITE, Type.KING, 0, 3), whiteKing)));
-         board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.BLACK, Type.KING, 0, 3), blackKing)));
-         AvailableMovement availableMovement = new AvailableMovement(move);
+        //GIVEN
+        final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
+        final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 4, 4);
+        final Piece bishop = new Piece(Color.WHITE, Type.BISHOP, 3, 4);
+        final Piece pon1 = new Piece(Color.WHITE, Type.BISHOP, 3, 3);
+        final Piece pon2 = new Piece(Color.WHITE, Type.BISHOP, 5, 4);
+        final Piece blackKing = new Piece(Color.BLACK, Type.KING, 0, 0);
+        Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
+                Arrays.asList(whiteKing, bishop, pon1, pon2),
+                new Player(Color.BLACK, Collections.emptyList()),
+                List.of(blackKing),
+                Color.WHITE);
+        board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.WHITE, Type.KING, 0, 3), whiteKing)));
+        board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.BLACK, Type.KING, 0, 3), blackKing)));
+        AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
-         //WHEN
-         final List<PieceMove> result = availableMovement.availableMove(board, whiteKing);
+        //WHEN
+        final List<PieceMove> result = availableMovement.availableMove(board, whiteKing);
 
-         //THEN
-         Assertions.assertThat(result).containsExactlyInAnyOrder(
-                 new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 4, 3)),
-                 new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 5, 3)),
-                 new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 3, 5)),
-                 new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 4, 5)),
-                 new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 5, 5)));
-     }
+        //THEN
+        Assertions.assertThat(result).containsExactlyInAnyOrder(
+                new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 4, 3)),
+                new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 5, 3)),
+                new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 3, 5)),
+                new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 4, 5)),
+                new PieceMove(whiteKing, new Piece(Color.WHITE, Type.KING, 5, 5)));
+    }
 
     @Test
     public void itShouldCalculateKingMoveWithoutWhiteAndWithBlackPiece() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 4, 4);
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 0, 6);
         final Piece blackPon = new Piece(Color.BLACK, Type.PON, 3, 3);
@@ -91,7 +95,7 @@ public class availableMovementTest {
                 Arrays.asList(blackKing, blackPon, blackRock),
                 Color.WHITE);
         board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.WHITE, Type.KING, 0, 3), whiteKing)));
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, whiteKing);
@@ -112,6 +116,7 @@ public class availableMovementTest {
     public void itShouldCalculateKingMoveWithWhiteAndBlackPiece() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 4, 4);
         final Piece whiteKnight = new Piece(Color.WHITE, Type.KNIGHT, 2, 4);
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 0, 6);
@@ -126,7 +131,7 @@ public class availableMovementTest {
                 Arrays.asList(blackKing, blackPon, blackRock),
                 Color.WHITE);
         board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.WHITE, Type.KING, 0, 3), whiteKing)));
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, whiteKing);
@@ -147,6 +152,7 @@ public class availableMovementTest {
     public void itShouldCalculateKingMoveWithBlackPiece() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 0, 6);
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 4, 4);
         final Piece bishop = new Piece(Color.BLACK, Type.BISHOP, 3, 4);
@@ -158,7 +164,7 @@ public class availableMovementTest {
                 Arrays.asList(blackKing, bishop, pon1, pon2),
                 Color.BLACK);
         board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.BLACK, Type.KING, 0, 3), blackKing)));
-        AvailableMovement availableMovement = new AvailableMovement(move);
+        AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, blackKing);
@@ -176,6 +182,7 @@ public class availableMovementTest {
     public void itShouldCalculateKingMoveWithoutBlackAndWithWhitePiece() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 4, 4);
         final Piece whitePon = new Piece(Color.WHITE, Type.PON, 3, 3);
         final Piece whiteRock = new Piece(Color.WHITE, Type.ROCK, 4, 3);
@@ -186,7 +193,7 @@ public class availableMovementTest {
                 Collections.singletonList(blackKing),
                 Color.BLACK);
         board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.BLACK, Type.KING, 0, 3), blackKing)));
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, blackKing);
@@ -207,6 +214,7 @@ public class availableMovementTest {
     public void itShouldCalculateWhiteKnightMove() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 4, 4);
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 0, 0);
         final Piece whitePon = new Piece(Color.WHITE, Type.PON, 3, 3);
@@ -217,7 +225,7 @@ public class availableMovementTest {
                 Collections.singletonList(blackKing),
                 Color.BLACK);
         board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.BLACK, Type.KING, 0, 3), blackKing)));
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, blackKing);
@@ -238,6 +246,7 @@ public class availableMovementTest {
     public void itShouldCalculateWhiteCastle() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 0, 4);
         final Piece whitePon = new Piece(Color.WHITE, Type.PON, 1, 5);
         final Piece whitePon2 = new Piece(Color.WHITE, Type.PON, 1, 6);
@@ -251,7 +260,7 @@ public class availableMovementTest {
                 Color.WHITE);
         board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.WHITE, Type.ROCK, 0, 0), new Piece(Color.WHITE, Type.ROCK, 4, 0))));
         board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.BLACK, Type.KING, 0, 0), new Piece(Color.BLACK, Type.KING, 4, 0))));
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, whiteKing);
@@ -272,6 +281,7 @@ public class availableMovementTest {
     public void itShouldCalculateWhiteCastleWhenThereIsPieceOnTheWay() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 0, 4);
         final Piece whitePon = new Piece(Color.WHITE, Type.PON, 1, 0);
         final Piece whitePon2 = new Piece(Color.WHITE, Type.PON, 1, 1);
@@ -286,7 +296,7 @@ public class availableMovementTest {
                 Color.WHITE);
         board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.WHITE, Type.ROCK, 0, 7), new Piece(Color.WHITE, Type.ROCK, 4, 7))));
         board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.BLACK, Type.KING, 0, 0), new Piece(Color.BLACK, Type.KING, 4, 0))));
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, whiteKing);
@@ -304,6 +314,7 @@ public class availableMovementTest {
     public void itShouldCalculateWhiteCastleWhenKingHasAlreadyMoved() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 0, 4);
         final Piece whitePon = new Piece(Color.WHITE, Type.PON, 1, 0);
         final Piece whitePon2 = new Piece(Color.WHITE, Type.PON, 1, 1);
@@ -317,7 +328,7 @@ public class availableMovementTest {
                 Color.WHITE);
         board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.WHITE, Type.KING, 0, 7), new Piece(Color.WHITE, Type.KING, 4, 7))));
         board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.BLACK, Type.KING, 0, 0), new Piece(Color.BLACK, Type.KING, 4, 0))));
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, whiteKing);
@@ -335,6 +346,7 @@ public class availableMovementTest {
     public void itShouldCalculateWhiteCastleWhenKingIsChecked() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 0, 4);
         final Piece whiteRock = new Piece(Color.WHITE, Type.ROCK, 0, 0);
         final Piece whiteRock2 = new Piece(Color.WHITE, Type.ROCK, 0, 7);
@@ -346,7 +358,7 @@ public class availableMovementTest {
                 List.of(blackKing, blackQueen),
                 Color.WHITE);
         board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.BLACK, Type.KING, 0, 0), new Piece(Color.BLACK, Type.KING, 4, 0))));
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, whiteKing);
@@ -363,6 +375,7 @@ public class availableMovementTest {
     public void itShouldCalculateWhiteLeftAndRightCastleWhenThereAreEnemyPieceLookingAtRock() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 0, 4);
         final Piece whiteRock = new Piece(Color.WHITE, Type.ROCK, 0, 0);
         final Piece whiteRock2 = new Piece(Color.WHITE, Type.ROCK, 0, 7);
@@ -375,7 +388,7 @@ public class availableMovementTest {
                 List.of(blackKing, blackRock, blackRock2),
                 Color.WHITE);
         board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.BLACK, Type.KING, 0, 0), new Piece(Color.BLACK, Type.KING, 4, 0))));
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, whiteKing);
@@ -393,6 +406,7 @@ public class availableMovementTest {
     public void itShouldCalculateBlackCastle() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 7, 4);
         final Piece blackPon = new Piece(Color.BLACK, Type.PON, 6, 5);
         final Piece blackPon2 = new Piece(Color.BLACK, Type.PON, 6, 6);
@@ -406,7 +420,7 @@ public class availableMovementTest {
                 Color.BLACK);
         board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.BLACK, Type.ROCK, 7, 0), new Piece(Color.BLACK, Type.ROCK, 4, 0))));
         board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.WHITE, Type.KING, 0, 0), new Piece(Color.WHITE, Type.KING, 4, 0))));
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, blackKing);
@@ -427,6 +441,7 @@ public class availableMovementTest {
     public void itShouldCalculateBlackCastleWhenThereIsPieceOnTheWay() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 7, 4);
         final Piece blackPon = new Piece(Color.BLACK, Type.PON, 6, 0);
         final Piece blackPon2 = new Piece(Color.BLACK, Type.PON, 6, 1);
@@ -441,7 +456,7 @@ public class availableMovementTest {
                 Color.BLACK);
         board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.BLACK, Type.ROCK, 7, 7), new Piece(Color.BLACK, Type.ROCK, 4, 7))));
         board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.WHITE, Type.KING, 0, 0), new Piece(Color.WHITE, Type.KING, 4, 0))));
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, blackKing);
@@ -459,6 +474,7 @@ public class availableMovementTest {
     public void itShouldCalculateBlackCastleWhenKingHasAlreadyMoved() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 7, 4);
         final Piece blackPon = new Piece(Color.BLACK, Type.PON, 6, 0);
         final Piece blackPon2 = new Piece(Color.BLACK, Type.PON, 6, 1);
@@ -472,7 +488,7 @@ public class availableMovementTest {
                 Color.BLACK);
         board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.BLACK, Type.KING, 7, 7), new Piece(Color.BLACK, Type.KING, 4, 7))));
         board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.WHITE, Type.KING, 0, 0), new Piece(Color.WHITE, Type.KING, 4, 0))));
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, blackKing);
@@ -490,6 +506,7 @@ public class availableMovementTest {
     public void itShouldCalculateBlackCastleWhenKingIsChecked() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 7, 4);
         final Piece blackRock = new Piece(Color.BLACK, Type.ROCK, 7, 0);
         final Piece blackRock2 = new Piece(Color.BLACK, Type.ROCK, 7, 7);
@@ -501,7 +518,7 @@ public class availableMovementTest {
                 List.of(blackKing, blackRock, blackRock2),
                 Color.BLACK);
         board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.WHITE, Type.KING, 0, 0), new Piece(Color.WHITE, Type.KING, 4, 0))));
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, blackKing);
@@ -518,6 +535,7 @@ public class availableMovementTest {
     public void itShouldCalculateBlackLeftAndRightCastleWhenThereAreEnemyPieceLookingAtRock() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 7, 4);
         final Piece blackRock = new Piece(Color.BLACK, Type.ROCK, 7, 0);
         final Piece blackRock2 = new Piece(Color.BLACK, Type.ROCK, 7, 7);
@@ -530,7 +548,7 @@ public class availableMovementTest {
                 List.of(blackKing, blackRock, blackRock2),
                 Color.WHITE);
         board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.WHITE, Type.KING, 0, 0), new Piece(Color.WHITE, Type.KING, 4, 0))));
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, blackKing);
@@ -554,6 +572,7 @@ public class availableMovementTest {
     public void itShouldCalculateWhiteKnightMoves() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 4, 4);
         final Piece whiteKnight = new Piece(Color.WHITE, Type.KNIGHT, 5, 6);
         final Board board = new Board(new Player(Color.BLACK, Collections.emptyList()),
@@ -561,7 +580,7 @@ public class availableMovementTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 Collections.emptyList(),
                 Color.WHITE);
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, whiteKnight);
@@ -573,13 +592,14 @@ public class availableMovementTest {
                 new PieceMove(whiteKnight, new Piece(Color.WHITE, Type.KNIGHT, 6, 4)),
                 new PieceMove(whiteKnight, new Piece(Color.WHITE, Type.KNIGHT, 3, 5)),
                 new PieceMove(whiteKnight, new Piece(Color.WHITE, Type.KNIGHT, 3, 7))
-                );
+        );
     }
 
     @Test
     public void itShouldCalculateWhiteKnightMovesWithBlackPiece() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 1, 2);
         final Piece whiteKnight = new Piece(Color.WHITE, Type.KNIGHT, 5, 6);
         final Piece blackQueen = new Piece(Color.BLACK, Type.QUEEN, 7, 7);
@@ -589,7 +609,7 @@ public class availableMovementTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackQueen, blackPon),
                 Color.WHITE);
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, whiteKnight);
@@ -609,6 +629,7 @@ public class availableMovementTest {
     public void itShouldCalculateBlackKnightMovesifKingIsCheckedByOnePiece() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 4, 4);
         final Piece blackKnight = new Piece(Color.BLACK, Type.KNIGHT, 5, 6);
         final Piece whiteQueen = new Piece(Color.WHITE, Type.QUEEN, 7, 7);
@@ -618,7 +639,7 @@ public class availableMovementTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackKnight, blackKing),
                 Color.BLACK);
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, blackKnight);
@@ -633,6 +654,7 @@ public class availableMovementTest {
     public void itShouldCalculateBlackKnightMovesifKingIsCheckedByTwoPiece() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 4, 4);
         final Piece blackKnight = new Piece(Color.BLACK, Type.KNIGHT, 5, 6);
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 0, 0);
@@ -645,7 +667,7 @@ public class availableMovementTest {
                 Color.BLACK);
         board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.WHITE, Type.KING, 3, 3), whiteKing)));
         board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.BLACK, Type.KING, 3, 3), blackKing)));
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, blackKnight);
@@ -658,6 +680,7 @@ public class availableMovementTest {
     public void itShouldCalculateWhiteKnightMovesWhenHeIsPinned() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 4, 4);
         final Piece whiteKnight = new Piece(Color.WHITE, Type.KNIGHT, 3, 4);
         final Piece blackQueen = new Piece(Color.BLACK, Type.QUEEN, 0, 4);
@@ -666,7 +689,7 @@ public class availableMovementTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackQueen),
                 Color.WHITE);
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, whiteKnight);
@@ -679,6 +702,7 @@ public class availableMovementTest {
     public void itShouldCalculateBlackKnightMoves() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 4, 4);
         final Piece blackKnight = new Piece(Color.BLACK, Type.KNIGHT, 5, 6);
         final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
@@ -686,7 +710,7 @@ public class availableMovementTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackKnight, blackKing),
                 Color.BLACK);
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, blackKnight);
@@ -705,6 +729,7 @@ public class availableMovementTest {
     public void itShouldCalculateBlackKnightMovesWithWhitePiece() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 1, 2);
         final Piece blackKnight = new Piece(Color.BLACK, Type.KNIGHT, 5, 6);
         final Piece whiteQueen = new Piece(Color.WHITE, Type.QUEEN, 7, 7);
@@ -714,7 +739,7 @@ public class availableMovementTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackKnight, blackKing),
                 Color.BLACK);
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, blackKnight);
@@ -734,6 +759,7 @@ public class availableMovementTest {
     public void itShouldCalculateWhiteKnightMovesifKingIsCheckedByOnePiece() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 4, 4);
         final Piece whiteKnight = new Piece(Color.WHITE, Type.KNIGHT, 5, 6);
         final Piece blackQueen = new Piece(Color.BLACK, Type.QUEEN, 7, 7);
@@ -743,7 +769,7 @@ public class availableMovementTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackQueen, blackPon),
                 Color.WHITE);
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, whiteKnight);
@@ -758,6 +784,7 @@ public class availableMovementTest {
     public void itShouldCalculateWhiteKnightMovesifKingIsCheckedByTwoPiece() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 4, 4);
         final Piece whiteKnight = new Piece(Color.WHITE, Type.KNIGHT, 5, 6);
         final Piece blackQueen = new Piece(Color.BLACK, Type.QUEEN, 7, 7);
@@ -767,7 +794,7 @@ public class availableMovementTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackQueen, blackPon),
                 Color.WHITE);
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, whiteKnight);
@@ -780,6 +807,7 @@ public class availableMovementTest {
     public void itShouldCalculateBlackKnightMovesWhenHeIsPinned() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 4, 4);
         final Piece blackKnight = new Piece(Color.BLACK, Type.KNIGHT, 3, 4);
         final Piece whiteQueen = new Piece(Color.WHITE, Type.QUEEN, 0, 4);
@@ -788,7 +816,7 @@ public class availableMovementTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackKnight, blackKing),
                 Color.BLACK);
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, blackKnight);
@@ -807,6 +835,7 @@ public class availableMovementTest {
     public void itShouldCalculateWhiteBishopMoves() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 4, 4);
         final Piece whiteBishop = new Piece(Color.WHITE, Type.BISHOP, 3, 4);
         final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
@@ -814,7 +843,7 @@ public class availableMovementTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 Collections.emptyList(),
                 Color.WHITE);
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, whiteBishop);
@@ -844,6 +873,7 @@ public class availableMovementTest {
     public void itShouldCalculateBlackBishopMoves() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 4, 4);
         final Piece blackBishop = new Piece(Color.BLACK, Type.BISHOP, 3, 4);
         final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
@@ -851,7 +881,7 @@ public class availableMovementTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackKing, blackBishop),
                 Color.BLACK);
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, blackBishop);
@@ -881,19 +911,20 @@ public class availableMovementTest {
     public void itShouldCalculateWhiteBishopMoveWhenThereAreBlackAndWhitePiece() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 4, 5);
         final Piece whiteBishop = new Piece(Color.WHITE, Type.BISHOP, 3, 4);
         final Piece blackPon = new Piece(Color.BLACK, Type.PON, 2, 3);
         final Piece blackKnight = new Piece(Color.BLACK, Type.KNIGHT, 6, 1);
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 6, 7);
         final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
-                List.of(whiteKing , whiteBishop),
+                List.of(whiteKing, whiteBishop),
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackPon, blackKnight, blackKing),
                 Color.WHITE);
         board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.WHITE, Type.KING, 3, 3), whiteKing)));
         board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.BLACK, Type.KING, 0, 3), blackKing)));
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, whiteBishop);
@@ -916,19 +947,20 @@ public class availableMovementTest {
     public void itShouldCalculateBlackBishopMoveWhenThereAreBlackAndWhitePiece() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 4, 5);
         final Piece blackBishop = new Piece(Color.BLACK, Type.BISHOP, 3, 4);
         final Piece whitePon = new Piece(Color.WHITE, Type.PON, 2, 3);
         final Piece whiteKnight = new Piece(Color.WHITE, Type.KNIGHT, 6, 1);
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 6, 7);
         final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
-                List.of(whiteKing , whiteKnight, whitePon),
+                List.of(whiteKing, whiteKnight, whitePon),
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackKing, blackBishop),
                 Color.BLACK);
         board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.WHITE, Type.KING, 3, 3), whiteKing)));
         board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.BLACK, Type.KING, 0, 3), blackKing)));
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, blackBishop);
@@ -951,15 +983,16 @@ public class availableMovementTest {
     public void itShouldCalculateWhiteBishopMoveWhenheIsPinned() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 4, 5);
         final Piece whiteBishop = new Piece(Color.WHITE, Type.BISHOP, 3, 4);
         final Piece blackQueen = new Piece(Color.BLACK, Type.QUEEN, 0, 1);
         final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
-                List.of(whiteKing , whiteBishop),
+                List.of(whiteKing, whiteBishop),
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackQueen),
                 Color.WHITE);
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, whiteBishop);
@@ -976,6 +1009,7 @@ public class availableMovementTest {
     public void itShouldCalculateBlackBishopMoveWhenheIsPinned() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 4, 5);
         final Piece blackBishop = new Piece(Color.BLACK, Type.BISHOP, 3, 4);
         final Piece whiteQueen = new Piece(Color.WHITE, Type.QUEEN, 0, 1);
@@ -984,10 +1018,10 @@ public class availableMovementTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackKing, blackBishop),
                 Color.BLACK);
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
-        final List<PieceMove> result = availableMovement.availableMove(board,blackBishop);
+        final List<PieceMove> result = availableMovement.availableMove(board, blackBishop);
 
         //THEN
         Assertions.assertThat(result).containsExactlyInAnyOrder(
@@ -1007,6 +1041,7 @@ public class availableMovementTest {
     public void itShouldCalculateWhiteRockMoves() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 4, 4);
         final Piece whiteRock = new Piece(Color.WHITE, Type.ROCK, 3, 3);
         final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
@@ -1014,7 +1049,7 @@ public class availableMovementTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 Collections.emptyList(),
                 Color.WHITE);
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, whiteRock);
@@ -1024,12 +1059,12 @@ public class availableMovementTest {
                 new PieceMove(whiteRock, new Piece(Color.WHITE, Type.ROCK, 2, 3)),
                 new PieceMove(whiteRock, new Piece(Color.WHITE, Type.ROCK, 1, 3)),
                 new PieceMove(whiteRock, new Piece(Color.WHITE, Type.ROCK, 0, 3)),
-                
+
                 new PieceMove(whiteRock, new Piece(Color.WHITE, Type.ROCK, 4, 3)),
                 new PieceMove(whiteRock, new Piece(Color.WHITE, Type.ROCK, 5, 3)),
                 new PieceMove(whiteRock, new Piece(Color.WHITE, Type.ROCK, 6, 3)),
                 new PieceMove(whiteRock, new Piece(Color.WHITE, Type.ROCK, 7, 3)),
-                
+
                 new PieceMove(whiteRock, new Piece(Color.WHITE, Type.ROCK, 3, 2)),
                 new PieceMove(whiteRock, new Piece(Color.WHITE, Type.ROCK, 3, 1)),
                 new PieceMove(whiteRock, new Piece(Color.WHITE, Type.ROCK, 3, 0)),
@@ -1045,6 +1080,7 @@ public class availableMovementTest {
     public void itShouldCalculateWhiteRockMovesWithBlackAndWhitePieces() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 3, 4);
         final Piece whiteRock = new Piece(Color.WHITE, Type.ROCK, 3, 3);
         final Piece blackRock = new Piece(Color.BLACK, Type.ROCK, 5, 3);
@@ -1054,7 +1090,7 @@ public class availableMovementTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackPon, blackRock),
                 Color.WHITE);
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, whiteRock);
@@ -1077,6 +1113,7 @@ public class availableMovementTest {
     public void itShouldCalculateWhiteRockMovesIfPinned() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 3, 4);
         final Piece whiteRock = new Piece(Color.WHITE, Type.ROCK, 3, 3);
         final Piece blackRock = new Piece(Color.BLACK, Type.ROCK, 3, 0);
@@ -1085,7 +1122,7 @@ public class availableMovementTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackRock),
                 Color.WHITE);
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, whiteRock);
@@ -1102,6 +1139,7 @@ public class availableMovementTest {
     public void itShouldCalculateBlackRockMoves() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 4, 4);
         final Piece blackRock = new Piece(Color.BLACK, Type.ROCK, 3, 3);
         final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
@@ -1109,10 +1147,10 @@ public class availableMovementTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackKing, blackRock),
                 Color.BLACK);
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
-        final List<PieceMove> result = availableMovement.availableMove(board,blackRock);
+        final List<PieceMove> result = availableMovement.availableMove(board, blackRock);
 
         //THEN
         Assertions.assertThat(result).containsExactlyInAnyOrder(
@@ -1140,6 +1178,7 @@ public class availableMovementTest {
     public void itShouldCalculateBlackRockMovesWithBlackAndWhitePieces() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 3, 4);
         final Piece blackRock = new Piece(Color.BLACK, Type.ROCK, 3, 3);
         final Piece whiteRock = new Piece(Color.WHITE, Type.ROCK, 5, 3);
@@ -1149,7 +1188,7 @@ public class availableMovementTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackKing, blackRock),
                 Color.BLACK);
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, blackRock);
@@ -1172,6 +1211,7 @@ public class availableMovementTest {
     public void itShouldCalculateBlackRockMovesIfPinned() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 3, 4);
         final Piece blackRock = new Piece(Color.BLACK, Type.ROCK, 3, 3);
         final Piece whiteRock = new Piece(Color.WHITE, Type.ROCK, 3, 0);
@@ -1180,7 +1220,7 @@ public class availableMovementTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackKing, blackRock),
                 Color.BLACK);
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, blackRock);
@@ -1203,6 +1243,7 @@ public class availableMovementTest {
     public void itShouldCalculateWhitePonMove() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 3, 4);
         final Piece whitePon = new Piece(Color.WHITE, Type.PON, 4, 0);
         final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
@@ -1210,7 +1251,7 @@ public class availableMovementTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 Collections.emptyList(),
                 Color.WHITE);
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, whitePon);
@@ -1225,6 +1266,7 @@ public class availableMovementTest {
     public void itShouldCalculateWhitePonMoveWithDefaultPosition() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 3, 4);
         final Piece whitePon = new Piece(Color.WHITE, Type.PON, 1, 0);
         final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
@@ -1232,7 +1274,7 @@ public class availableMovementTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 Collections.emptyList(),
                 Color.WHITE);
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, whitePon);
@@ -1248,6 +1290,7 @@ public class availableMovementTest {
     public void itShouldCalculateWhitePonMoveWithWhiteAndBlackPiece() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 0, 4);
         final Piece whitePon = new Piece(Color.WHITE, Type.PON, 4, 1);
         final Piece blackPon = new Piece(Color.BLACK, Type.PON, 6, 1);
@@ -1257,7 +1300,7 @@ public class availableMovementTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackPon, blackQueen),
                 Color.WHITE);
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, whitePon);
@@ -1273,6 +1316,7 @@ public class availableMovementTest {
     public void itShouldCalculateWhiteEnPassant() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 0, 4);
         final Piece whitePon = new Piece(Color.WHITE, Type.PON, 4, 1);
         final Piece blackPon = new Piece(Color.BLACK, Type.PON, 4, 2);
@@ -1282,7 +1326,7 @@ public class availableMovementTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackPon, blackKing),
                 Color.WHITE);
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
         board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.BLACK, Type.PON, 6, 2), blackPon)));
 
         //WHEN
@@ -1298,6 +1342,7 @@ public class availableMovementTest {
     public void itShouldCalculateBlackPonMove() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 3, 4);
         final Piece blackPon = new Piece(Color.BLACK, Type.PON, 4, 0);
         final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
@@ -1305,7 +1350,7 @@ public class availableMovementTest {
                 new Player(Color.WHITE, Collections.emptyList()),
                 List.of(blackKing, blackPon),
                 Color.BLACK);
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, blackPon);
@@ -1320,6 +1365,7 @@ public class availableMovementTest {
     public void itShouldCalculateBlackPonMoveWithDefaultPosition() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 3, 4);
         final Piece blackPon = new Piece(Color.BLACK, Type.PON, 6, 0);
         final Board board = new Board(new Player(Color.WHITE, Collections.emptyList()),
@@ -1327,7 +1373,7 @@ public class availableMovementTest {
                 new Player(Color.WHITE, Collections.emptyList()),
                 List.of(blackKing, blackPon),
                 Color.BLACK);
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, blackPon);
@@ -1343,6 +1389,7 @@ public class availableMovementTest {
     public void itShouldCalculateBlackPonMoveWithWhiteAndBlackPiece() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 1, 4);
         final Piece blackPon = new Piece(Color.BLACK, Type.PON, 6, 1);
         final Piece whitePon = new Piece(Color.WHITE, Type.PON, 4, 1);
@@ -1352,7 +1399,7 @@ public class availableMovementTest {
                 new Player(Color.WHITE, Collections.emptyList()),
                 List.of(blackPon, blackKing),
                 Color.BLACK);
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final List<PieceMove> result = availableMovement.availableMove(board, blackPon);
@@ -1368,6 +1415,7 @@ public class availableMovementTest {
     public void itShouldCalculateBlackEnPassant() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 0, 4);
         final Piece whitePon = new Piece(Color.WHITE, Type.PON, 3, 1);
         final Piece blackPon = new Piece(Color.BLACK, Type.PON, 3, 2);
@@ -1377,7 +1425,7 @@ public class availableMovementTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackPon, blackKing),
                 Color.BLACK);
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
         board.addHistoryMove(Collections.singletonList(new PieceMove(new Piece(Color.WHITE, Type.PON, 1, 1), whitePon)));
 
         //WHEN
@@ -1391,7 +1439,7 @@ public class availableMovementTest {
 
     /************************************************************************************************************************
      *
-     *                                                   ISKINGCHECK
+     *                                                   IsThereAWinner
      *
      ***********************************************************************************************************************/
 
@@ -1399,6 +1447,7 @@ public class availableMovementTest {
     public void itShouldDeclareWhiteWinner() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 0, 4);
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 3, 2);
         final Piece whiteRock1 = new Piece(Color.WHITE, Type.ROCK, 0, 2);
@@ -1408,7 +1457,7 @@ public class availableMovementTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackKing),
                 Color.BLACK);
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final boolean result = availableMovement.isThereAWinner(board);
@@ -1421,6 +1470,7 @@ public class availableMovementTest {
     public void itShouldNotDeclareWhiteWinner() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 0, 4);
         final Piece blackPon = new Piece(Color.BLACK, Type.PON, 1, 5);
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 3, 2);
@@ -1431,7 +1481,7 @@ public class availableMovementTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackKing, blackPon),
                 Color.BLACK);
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final boolean result = availableMovement.isThereAWinner(board);
@@ -1444,6 +1494,7 @@ public class availableMovementTest {
     public void itShouldDeclareBlackWinner() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 0, 4);
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 3, 2);
         final Piece blackRock1 = new Piece(Color.BLACK, Type.ROCK, 0, 2);
@@ -1453,7 +1504,7 @@ public class availableMovementTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackKing, blackRock1, blackRock2),
                 Color.WHITE);
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final boolean result = availableMovement.isThereAWinner(board);
@@ -1466,6 +1517,7 @@ public class availableMovementTest {
     public void itShouldNotDeclareBlackWinner() {
         //GIVEN
         final Move move = new Move();
+        final BoardBuilder boardBuilder = new BoardBuilder(move);
         final Piece whiteKing = new Piece(Color.WHITE, Type.KING, 0, 4);
         final Piece whitePon = new Piece(Color.WHITE, Type.PON, 1, 5);
         final Piece blackKing = new Piece(Color.BLACK, Type.KING, 3, 2);
@@ -1476,7 +1528,7 @@ public class availableMovementTest {
                 new Player(Color.BLACK, Collections.emptyList()),
                 List.of(blackKing, blackRock1, blackRock2),
                 Color.WHITE);
-        final AvailableMovement availableMovement = new AvailableMovement(move);
+        final AvailableMovement availableMovement = new AvailableMovement(move, boardBuilder);
 
         //WHEN
         final boolean result = availableMovement.isThereAWinner(board);
@@ -1484,4 +1536,13 @@ public class availableMovementTest {
         //THEN
         Assertions.assertThat(result).isFalse();
     }
+
+    /************************************************************************************************************************
+     *
+     *                                                      IsThereADraw
+     *
+     ***********************************************************************************************************************/
+
+    //todo tester les cas de figure de draw
+
 }

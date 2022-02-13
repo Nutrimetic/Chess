@@ -1,9 +1,6 @@
 package fr.baptiste.domain;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Board implements Cloneable {
@@ -69,6 +66,19 @@ public class Board implements Cloneable {
 
     public void addHistoryMove(List<PieceMove> pieceMove) {
         this.history.addAll(pieceMove);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Board board = (Board) o;
+        return playerWhite.equals(board.playerWhite) && piecePlayerWhite.equals(board.piecePlayerWhite) && playerBlack.equals(board.playerBlack) && piecePlayerBlack.equals(board.piecePlayerBlack) && tempo == board.tempo;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(playerWhite, piecePlayerWhite, playerBlack, piecePlayerBlack, tempo);
     }
 
     @Override

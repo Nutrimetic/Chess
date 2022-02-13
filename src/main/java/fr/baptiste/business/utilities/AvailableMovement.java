@@ -2,6 +2,7 @@ package fr.baptiste.business.utilities;
 
 import fr.baptiste.business.exceptions.cantFindPieceException;
 import fr.baptiste.domain.*;
+import fr.baptiste.domain.builder.BoardBuilder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,13 +13,15 @@ import java.util.stream.Collectors;
 public class AvailableMovement {
 
     private final Move move;
+    private final BoardBuilder boardBuilder;
 
-    public AvailableMovement(Move move) {
+    public AvailableMovement(Move move, BoardBuilder boardBuilder) {
         this.move = move;
+        this.boardBuilder = boardBuilder;
     }
 
     /**
-     * Détermine si le board est dans un situation ou un joueur à gagné.
+     * Détermine si le board est dans une situation ou un joueur à gagné.
      * Afin de savoir si un joueur a gagné, il suffit de simuler tous les coups possibles du joueur qui a le tempo et de voir si le roi du joueur ayant le tempo
      * est toujours en état de prise après chaque coup.
      *
@@ -38,16 +41,67 @@ public class AvailableMovement {
     }
 
     /**
-     * todo
      * Détermine si le board est dans un situation ou une égalité est définis
      * Voici la liste des cas de figure ou il y a égalité :
-     * - Un des 2 joueurs n'a plus de coup disponible
-     * - répétiton 3 fois des méme coups
+     * - Le joueur qui a le tempo n'a plus de coup disponible
+     * - répétiton 3 fois d'une même position
+     * - Manque de matériels soit
+     *      .Roi vs Roi
+     *      .Roi vs Roi + 2 knights
+     *      .Roi vs Roi + 1 knight/1 bishop
+     * - 50 coup joué sans prise de pièce ou coup de pion
      *
      * @param board
      * @return true si il y a un draw
      */
     public boolean isThereADraw(Board board) {
+        if(Color.WHITE.equals(board.getTempo())) {
+            //1 - Le joueur qui a le tempo n'a plus de coup disponible
+            if(board.getPiecePlayerWhite().stream()
+                    .mapToLong(piece -> availableMove(board, piece).size())
+                    .sum() == 0) {
+                return true;
+            }
+        } else {
+            //1 - Le joueur qui a le tempo n'a plus de coup disponible
+            if(board.getPiecePlayerBlack().stream()
+                    .mapToLong(piece -> availableMove(board, piece).size())
+                    .sum() == 0) {
+                return true;
+            }
+        }
+
+        //2 - répétition 3 fois d'une même position
+        if (repetitionOfPosition3Times(board)) return true;
+
+        //3 - Manque de matériel
+        if (notEnoughMaterial(board)) return true;
+
+        //4 - 50 coups sans prise de pièces ou coup de pion
+        if(board.getHistory().size() >= 50) {
+            return board.getHistory().subList(board.getHistory().size() - 51, board.getHistory().size() - 1).stream()
+                    .anyMatch(pieceMove -> Type.PON.equals(pieceMove.getPieceBeforeMove().get(0).getType()) ||
+                            pieceMove.getPieceCaptured().isPresent());
+        }
+
+        return false;
+    }
+
+    private boolean notEnoughMaterial(Board board) {
+        if(board.getPiecePlayerWhite().size() == 1 || //ne contient que le roi
+                (board.getPiecePlayerWhite().size() == 3 && board.getPiecePlayerWhite().stream().filter(piece -> piece.getType().equals(Type.KNIGHT)).count() == 2) || //contient le roi + 2 knights
+                (board.getPiecePlayerWhite().size() == 2 && board.getPiecePlayerWhite().stream().filter(piece -> piece.getType().equals(Type.KNIGHT) || piece.getType().equals(Type.BISHOP)).count() == 1)) { //contient le roi + 1 knight/bishop
+            return true;
+        }
+        return false;
+    }
+
+    private boolean repetitionOfPosition3Times(Board board) {
+        Board boardNMinus1 = boardBuilder.reset().setHistory(board.getHistory().subList(0, board.getHistory().size() - 2)).build();
+        Board boardNMinus2 = boardBuilder.reset().setHistory(board.getHistory().subList(0, board.getHistory().size() - 4)).build();
+        if(board.equals(boardNMinus1) && board.equals(boardNMinus2)) {
+            return true;
+        }
         return false;
     }
 

@@ -1,13 +1,25 @@
 package fr.baptiste.domain.builder;
 
+import fr.baptiste.business.utilities.Move;
 import fr.baptiste.domain.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class BoardBuilder {
+    private final Move move;
+    private List<PieceMove> pieceMoves;
+
+    public BoardBuilder(Move move) {
+        this.move = move;
+    }
+
+    public BoardBuilder reset() {
+        this.pieceMoves = null;
+        return this;
+    }
+
     public Board initBoard() {
         List<Piece> blackPiece = new ArrayList<>();
         blackPiece.add(new Piece(Color.BLACK, Type.PON, 6, 0));
@@ -51,5 +63,20 @@ public class BoardBuilder {
                 new Player(Color.BLACK, Collections.emptyList()),
                 blackPiece,
                 Color.WHITE);
+    }
+
+    public BoardBuilder setHistory(List<PieceMove> pieceMoves) {
+        this.pieceMoves = pieceMoves;
+        return this;
+    }
+
+    public Board build() {
+        Board board = initBoard();
+        if(pieceMoves != null) {
+            for(PieceMove pieceMove : pieceMoves) {
+                board = move.move(board, pieceMove);
+            }
+        }
+        return board;
     }
 }
