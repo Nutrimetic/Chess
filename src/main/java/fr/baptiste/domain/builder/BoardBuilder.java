@@ -3,9 +3,7 @@ package fr.baptiste.domain.builder;
 import fr.baptiste.business.utilities.Move;
 import fr.baptiste.domain.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class BoardBuilder {
     private final Move move;
@@ -21,7 +19,7 @@ public class BoardBuilder {
     }
 
     public Board initBoard() {
-        List<Piece> blackPiece = new ArrayList<>();
+        Set<Piece> blackPiece = new HashSet<>();
         blackPiece.add(new Piece(Color.BLACK, Type.PON, 6, 0));
         blackPiece.add(new Piece(Color.BLACK, Type.PON, 6, 1));
         blackPiece.add(new Piece(Color.BLACK, Type.PON, 6, 2));
@@ -39,7 +37,7 @@ public class BoardBuilder {
         blackPiece.add(new Piece(Color.BLACK, Type.KNIGHT, 7, 6));
         blackPiece.add(new Piece(Color.BLACK, Type.ROCK, 7, 7));
 
-        List<Piece> whitePiece = new ArrayList<>();
+        Set<Piece> whitePiece = new HashSet<>();
         whitePiece.add(new Piece(Color.WHITE, Type.PON, 1, 0));
         whitePiece.add(new Piece(Color.WHITE, Type.PON, 1, 1));
         whitePiece.add(new Piece(Color.WHITE, Type.PON, 1, 2));

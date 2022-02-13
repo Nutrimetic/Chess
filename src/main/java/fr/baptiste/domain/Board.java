@@ -5,13 +5,13 @@ import java.util.stream.Collectors;
 
 public class Board implements Cloneable {
     private Player playerWhite;
-    private List<Piece> piecePlayerWhite;
+    private Set<Piece> piecePlayerWhite;
     private Player playerBlack;
-    private List<Piece> piecePlayerBlack;
+    private Set<Piece> piecePlayerBlack;
     private Color tempo;
     private List<PieceMove> history;
 
-    public Board(Player playerWhite, List<Piece> piecePlayerWhite, Player playerBlack, List<Piece> piecePlayerBlack, Color tempo) {
+    public Board(Player playerWhite, Set<Piece> piecePlayerWhite, Player playerBlack, Set<Piece> piecePlayerBlack, Color tempo) {
         this.playerWhite = playerWhite;
         this.piecePlayerWhite = piecePlayerWhite;
         this.playerBlack = playerBlack;
@@ -28,11 +28,11 @@ public class Board implements Cloneable {
         this.playerWhite = playerWhite;
     }
 
-    public List<Piece> getPiecePlayerWhite() {
+    public Set<Piece> getPiecePlayerWhite() {
         return piecePlayerWhite;
     }
 
-    public void setPiecePlayerWhite(List<Piece> piecePlayerWhite) {
+    public void setPiecePlayerWhite(Set<Piece> piecePlayerWhite) {
         this.piecePlayerWhite = piecePlayerWhite;
     }
 
@@ -44,11 +44,11 @@ public class Board implements Cloneable {
         this.playerBlack = playerBlack;
     }
 
-    public List<Piece> getPiecePlayerBlack() {
+    public Set<Piece> getPiecePlayerBlack() {
         return piecePlayerBlack;
     }
 
-    public void setPiecePlayerBlack(List<Piece> piecePlayerBlack) {
+    public void setPiecePlayerBlack(Set<Piece> piecePlayerBlack) {
         this.piecePlayerBlack = piecePlayerBlack;
     }
 
@@ -85,9 +85,9 @@ public class Board implements Cloneable {
     public Board clone() throws CloneNotSupportedException {
         Board result = new Board(
                 playerWhite.clone(),
-                piecePlayerWhite.stream().map(Piece::clone).collect(Collectors.toList()),
+                piecePlayerWhite.stream().map(Piece::clone).collect(Collectors.toSet()),
                 playerBlack.clone(),
-                piecePlayerBlack.stream().map(Piece::clone).collect(Collectors.toList()),
+                piecePlayerBlack.stream().map(Piece::clone).collect(Collectors.toSet()),
                 this.tempo);
         result.addHistoryMove(this.history);
         return result;

@@ -8,6 +8,7 @@ import fr.baptiste.domain.PieceMove;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -23,14 +24,14 @@ public class Move {
      * @return le nouveau board avec le mouvement joué
      */
     public Board move(Board board, PieceMove pieceMove) {
-        List<Piece> whitePiece;
-        List<Piece> blackPiece;
+        Set<Piece> whitePiece;
+        Set<Piece> blackPiece;
         Color tempo;
         try {
             Board result = board.clone();
             if(Color.WHITE.equals(pieceMove.getPieceBeforeMove().get(0).getColor())) {
-                blackPiece = board.getPiecePlayerBlack().stream().map(Piece::clone).collect(Collectors.toList());
-                whitePiece = board.getPiecePlayerWhite().stream().map(Piece::clone).collect(Collectors.toList());
+                blackPiece = board.getPiecePlayerBlack().stream().map(Piece::clone).collect(Collectors.toSet());
+                whitePiece = board.getPiecePlayerWhite().stream().map(Piece::clone).collect(Collectors.toSet());
                 whitePiece.removeAll(pieceMove.getPieceBeforeMove());
                 whitePiece.addAll(pieceMove.getPieceAfterMove());
 
@@ -40,8 +41,8 @@ public class Move {
                 }
                 tempo = Color.BLACK;
             } else {
-                whitePiece = board.getPiecePlayerWhite().stream().map(Piece::clone).collect(Collectors.toList());
-                blackPiece = board.getPiecePlayerBlack().stream().map(Piece::clone).collect(Collectors.toList());
+                whitePiece = board.getPiecePlayerWhite().stream().map(Piece::clone).collect(Collectors.toSet());
+                blackPiece = board.getPiecePlayerBlack().stream().map(Piece::clone).collect(Collectors.toSet());
                 blackPiece.removeAll(pieceMove.getPieceBeforeMove());
                 blackPiece.addAll(pieceMove.getPieceAfterMove());
 

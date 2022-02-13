@@ -88,19 +88,25 @@ public class AvailableMovement {
     }
 
     private boolean notEnoughMaterial(Board board) {
-        if(board.getPiecePlayerWhite().size() == 1 || //ne contient que le roi
-                (board.getPiecePlayerWhite().size() == 3 && board.getPiecePlayerWhite().stream().filter(piece -> piece.getType().equals(Type.KNIGHT)).count() == 2) || //contient le roi + 2 knights
-                (board.getPiecePlayerWhite().size() == 2 && board.getPiecePlayerWhite().stream().filter(piece -> piece.getType().equals(Type.KNIGHT) || piece.getType().equals(Type.BISHOP)).count() == 1)) { //contient le roi + 1 knight/bishop
+        if((board.getPiecePlayerWhite().size() == 1 || //ne contient que le roi blanc
+                (board.getPiecePlayerWhite().size() == 3 && board.getPiecePlayerWhite().stream().filter(piece -> piece.getType().equals(Type.KNIGHT)).count() == 2) || //contient le roi blanc + 2 knights blanc
+                (board.getPiecePlayerWhite().size() == 2 && board.getPiecePlayerWhite().stream().filter(piece -> piece.getType().equals(Type.KNIGHT) || piece.getType().equals(Type.BISHOP)).count() == 1)) &&
+                (board.getPiecePlayerBlack().size() == 1 || //ne contient que le roi blanc
+                        (board.getPiecePlayerBlack().size() == 3 && board.getPiecePlayerBlack().stream().filter(piece -> piece.getType().equals(Type.KNIGHT)).count() == 2) || //contient le roi blanc + 2 knights blanc
+                        (board.getPiecePlayerBlack().size() == 2 && board.getPiecePlayerBlack().stream().filter(piece -> piece.getType().equals(Type.KNIGHT) || piece.getType().equals(Type.BISHOP)).count() == 1))
+        ) { //contient le roi blanc + 1 knight/bishop blanc
             return true;
         }
         return false;
     }
 
     private boolean repetitionOfPosition3Times(Board board) {
-        Board boardNMinus1 = boardBuilder.reset().setHistory(board.getHistory().subList(0, board.getHistory().size() - 2)).build();
-        Board boardNMinus2 = boardBuilder.reset().setHistory(board.getHistory().subList(0, board.getHistory().size() - 4)).build();
-        if(board.equals(boardNMinus1) && board.equals(boardNMinus2)) {
-            return true;
+        if(board.getHistory().size() >= 8) {
+            Board boardNMinus1 = boardBuilder.reset().setHistory(board.getHistory().subList(0, board.getHistory().size() - 4)).build();
+            Board boardNMinus2 = boardBuilder.reset().setHistory(board.getHistory().subList(0, board.getHistory().size() - 8)).build();
+            if (board.equals(boardNMinus1) && board.equals(boardNMinus2)) {
+                return true;
+            }
         }
         return false;
     }
