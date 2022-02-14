@@ -7,7 +7,6 @@ import fr.baptiste.domain.Piece;
 import fr.baptiste.domain.PieceMove;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
